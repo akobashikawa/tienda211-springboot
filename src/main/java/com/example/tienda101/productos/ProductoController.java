@@ -14,27 +14,26 @@ public class ProductoController {
 
     @GetMapping
     public List<Producto> getItems() {
-        return productoService.findAll();
+        return productoService.getItems();
     }
 
     @GetMapping("/{id}")
     public Producto getItemById(@PathVariable Long id) {
-        return productoService.findById(id);
+        return productoService.getItemById(id);
     }
 
     @PostMapping
     public Producto createItem(@RequestBody Producto producto) {
-        return productoService.save(producto);
+        return productoService.createItem(producto);
     }
 
     @PutMapping("/{id}")
     public Producto updateItem(@PathVariable Long id, @RequestBody Producto producto) {
-        producto.setId(id);
-        return productoService.save(producto);
+        return productoService.updateItem(id, producto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteItemById(@PathVariable Long id) {
-        productoService.deleteById(id);
+        productoService.deleteItemById(id);
     }
 }

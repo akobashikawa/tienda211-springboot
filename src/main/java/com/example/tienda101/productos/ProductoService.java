@@ -10,19 +10,24 @@ public class ProductoService {
     @Autowired
     private ProductoRepository productoRepository;
 
-    public List<Producto> findAll() {
+    public List<Producto> getItems() {
         return productoRepository.findAll();
     }
 
-    public Producto findById(Long id) {
+    public Producto getItemById(Long id) {
         return productoRepository.findById(id).orElse(null);
     }
 
-    public Producto save(Producto producto) {
+    public Producto createItem(Producto producto) {
+        return productoRepository.save(producto);
+    }
+    
+    public Producto updateItem(Long id, Producto producto) {
+    	producto.setId(id);
         return productoRepository.save(producto);
     }
 
-    public void deleteById(Long id) {
+    public void deleteItemById(Long id) {
         productoRepository.deleteById(id);
     }
 }

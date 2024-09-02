@@ -14,27 +14,26 @@ public class PersonaController {
 
 	@GetMapping
 	public List<Persona> getItems() {
-		return personaService.findAll();
+		return personaService.getItems();
 	}
 
 	@GetMapping("/{id}")
 	public Persona getItemById(@PathVariable Long id) {
-		return personaService.findById(id);
+		return personaService.getItemById(id);
 	}
 
 	@PostMapping
 	public Persona createItem(@RequestBody Persona persona) {
-		return personaService.save(persona);
+		return personaService.createItem(persona);
 	}
 
 	@PutMapping("/{id}")
 	public Persona updateItem(@PathVariable Long id, @RequestBody Persona persona) {
-		persona.setId(id);
-		return personaService.save(persona);
+		return personaService.updateItem(id, persona);
 	}
 
 	@DeleteMapping("/{id}")
 	public void deleteItemById(@PathVariable Long id) {
-		personaService.deleteById(id);
+		personaService.deleteItemById(id);
 	}
 }

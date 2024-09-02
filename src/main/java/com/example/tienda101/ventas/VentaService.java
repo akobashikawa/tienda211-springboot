@@ -23,15 +23,15 @@ public class VentaService {
     @Autowired
     private PersonaRepository personaRepository;
 
-    public List<Venta> findAll() {
+    public List<Venta> getItems() {
         return ventaRepository.findAll();
     }
 
-    public Venta findById(Long id) {
+    public Venta getItemById(Long id) {
         return ventaRepository.findById(id).orElse(null);
     }
-
-    public Venta save(VentaDTO ventaDTO) {
+    
+    public Venta createItem(VentaDTO ventaDTO) {
     	Producto producto = productoRepository.findById(ventaDTO.getProducto_id())
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
         Persona persona = personaRepository.findById(ventaDTO.getPersona_id())
@@ -47,7 +47,25 @@ public class VentaService {
         return ventaRepository.save(venta);
     }
 
-    public void deleteById(Long id) {
+    public Venta updateItem(Long id, VentaDTO ventaDTO) {
+    	ventaDTO.setId(id);
+    	
+    	Producto producto = productoRepository.findById(ventaDTO.getProducto_id())
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        Persona persona = personaRepository.findById(ventaDTO.getPersona_id())
+                .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+        
+        Venta venta = new Venta();
+        venta.setProducto(producto);
+        venta.setPersona(persona);
+        venta.setPrecio(ventaDTO.getPrecio());
+        venta.setCantidad(ventaDTO.getCantidad());
+        venta.setFecha(LocalDate.now());
+
+        return ventaRepository.save(venta);
+    }
+
+    public void deleteItemById(Long id) {
         ventaRepository.deleteById(id);
     }
 }

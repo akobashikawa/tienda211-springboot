@@ -10,19 +10,24 @@ public class PersonaService {
     @Autowired
     private PersonaRepository personaRepository;
 
-    public List<Persona> findAll() {
+    public List<Persona> getItems() {
         return personaRepository.findAll();
     }
 
-    public Persona findById(Long id) {
+    public Persona getItemById(Long id) {
         return personaRepository.findById(id).orElse(null);
     }
 
-    public Persona save(Persona persona) {
+    public Persona createItem(Persona persona) {
+        return personaRepository.save(persona);
+    }
+    
+    public Persona updateItem(Long id, Persona persona) {
+    	persona.setId(id);
         return personaRepository.save(persona);
     }
 
-    public void deleteById(Long id) {
+    public void deleteItemById(Long id) {
         personaRepository.deleteById(id);
     }
 }

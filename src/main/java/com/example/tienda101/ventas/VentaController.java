@@ -14,27 +14,26 @@ public class VentaController {
 
     @GetMapping
     public List<Venta> getItems() {
-        return ventaService.findAll();
+        return ventaService.getItems();
     }
 
     @GetMapping("/{id}")
     public Venta getItemById(@PathVariable Long id) {
-        return ventaService.findById(id);
+        return ventaService.getItemById(id);
     }
 
     @PostMapping
     public Venta createItem(@RequestBody VentaDTO ventaDTO) {
-        return ventaService.save(ventaDTO);
+        return ventaService.createItem(ventaDTO);
     }
 
     @PutMapping("/{id}")
     public Venta updateItem(@PathVariable Long id, @RequestBody VentaDTO ventaDTO) {
-    	ventaDTO.setId(id);
-        return ventaService.save(ventaDTO);
+        return ventaService.updateItem(id, ventaDTO);
     }
 
     @DeleteMapping("/{id}")
     public void deleteItemById(@PathVariable Long id) {
-        ventaService.deleteById(id);
+        ventaService.deleteItemById(id);
     }
 }
