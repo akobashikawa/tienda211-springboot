@@ -13,28 +13,28 @@ public class ProductoController {
     private ProductoService productoService;
 
     @GetMapping
-    public List<Producto> findAll() {
+    public List<Producto> getItems() {
         return productoService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Producto findById(@PathVariable Long id) {
+    public Producto getItemById(@PathVariable Long id) {
         return productoService.findById(id);
     }
 
     @PostMapping
-    public Producto save(@RequestBody Producto producto) {
+    public Producto createItem(@RequestBody Producto producto) {
         return productoService.save(producto);
     }
 
     @PutMapping("/{id}")
-    public Producto update(@PathVariable Long id, @RequestBody Producto producto) {
+    public Producto updateItem(@PathVariable Long id, @RequestBody Producto producto) {
         producto.setId(id);
         return productoService.save(producto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id) {
+    public void deleteItemById(@PathVariable Long id) {
         productoService.deleteById(id);
     }
 }
