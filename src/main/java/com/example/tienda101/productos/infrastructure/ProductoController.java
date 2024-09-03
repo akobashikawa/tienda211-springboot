@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.tienda101.productos.application.ProductoService;
+import com.example.tienda101.productos.application.ProductoUpdateDTO;
 import com.example.tienda101.productos.domain.Producto;
 
 import java.util.List;
@@ -32,7 +33,18 @@ public class ProductoController {
     }
 
     @PutMapping("/{id}")
-    public Producto updateItem(@PathVariable Long id, @RequestBody Producto producto) {
+    public Producto updateItem(@PathVariable Long id, @RequestBody ProductoUpdateDTO productoDTO) {
+    	Producto producto = new Producto();
+    	if (productoDTO.getNombre() != null) {
+            producto.setNombre(productoDTO.getNombre());
+        }
+        if (productoDTO.getPrecio() != null) {
+            producto.setPrecio(productoDTO.getPrecio());
+        }
+        if (productoDTO.getCantidad() != null) {
+            producto.setCantidad(productoDTO.getCantidad());
+        }
+
         return productoService.updateItem(id, producto);
     }
 

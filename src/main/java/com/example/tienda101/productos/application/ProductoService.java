@@ -30,8 +30,17 @@ public class ProductoService {
     }
     
     public Producto updateItem(Long id, Producto producto) {
-    	producto.setId(id);
-        return productoRepository.save(producto);
+    	Producto found = productoRepository.findById(id).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+    	if (producto.getNombre() != null) {
+    		found.setNombre(producto.getNombre());
+    	}
+    	if (producto.getCantidad() != null) {
+    		found.setCantidad(producto.getCantidad());
+    	}
+    	if (producto.getPrecio() != null) {
+    		found.setPrecio(producto.getPrecio());
+    	}
+        return productoRepository.save(found);
     }
 
     public void deleteItemById(Long id) {

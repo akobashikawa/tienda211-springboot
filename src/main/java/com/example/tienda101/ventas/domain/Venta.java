@@ -28,7 +28,7 @@ public class Venta {
 
 	private BigDecimal precio;
 	
-	private int cantidad;
+	private Integer cantidad;
 	
 	@Column(name = "fecha", nullable = false, updatable = false)
 	private LocalDate fecha = LocalDate.now();
