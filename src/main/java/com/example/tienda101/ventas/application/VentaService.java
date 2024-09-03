@@ -3,10 +3,10 @@ package com.example.tienda101.ventas.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.tienda101.personas.application.PersonaService;
 import com.example.tienda101.personas.domain.Persona;
-import com.example.tienda101.personas.domain.PersonaRepository;
+import com.example.tienda101.productos.application.ProductoService;
 import com.example.tienda101.productos.domain.Producto;
-import com.example.tienda101.productos.domain.ProductoRepository;
 import com.example.tienda101.ventas.domain.Venta;
 import com.example.tienda101.ventas.domain.VentaRepository;
 
@@ -18,14 +18,13 @@ public class VentaService {
 
 	private final VentaRepository ventaRepository;
     
-    private final ProductoRepository productoRepository;
-
-    private final PersonaRepository personaRepository;
+	private final ProductoService productoService;
+    private final PersonaService personaService;
     
-    public VentaService(VentaRepository ventaRepository, ProductoRepository productoRepository, PersonaRepository personaRepository) {
+    public VentaService(VentaRepository ventaRepository, ProductoService productoService, PersonaService personaService) {
         this.ventaRepository = ventaRepository;
-		this.productoRepository = productoRepository;
-		this.personaRepository = personaRepository;
+        this.productoService = productoService;
+        this.personaService = personaService;
     }
 
     public List<Venta> getItems() {
@@ -47,9 +46,9 @@ public class VentaService {
     
     @Transactional
     public Venta saveItem(Venta venta) {
-    	Producto producto = productoRepository.findById(venta.getProducto().getId())
+    	Producto producto = productoService.getItemById(venta.getProducto().getId())
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        Persona persona = personaRepository.findById(venta.getPersona().getId())
+        Persona persona = personaService.getItemById(venta.getPersona().getId())
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
         
         venta.setProducto(producto);
@@ -72,6 +71,6 @@ public class VentaService {
             throw new RuntimeException("Cantidad insuficiente para el producto " + producto.getId());
         }
         producto.setCantidad(producto.getCantidad() - quantity);
-        productoRepository.save(producto);
+        productoService.updateItem(producto.getId(), producto);
     }
 }

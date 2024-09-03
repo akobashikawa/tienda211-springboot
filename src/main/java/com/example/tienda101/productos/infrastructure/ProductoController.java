@@ -7,6 +7,7 @@ import com.example.tienda101.productos.application.ProductoService;
 import com.example.tienda101.productos.domain.Producto;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -21,7 +22,7 @@ public class ProductoController {
     }
 
     @GetMapping("/{id}")
-    public Producto getItemById(@PathVariable Long id) {
+    public Optional<Producto> getItemById(@PathVariable Long id) {
         return productoService.getItemById(id);
     }
 

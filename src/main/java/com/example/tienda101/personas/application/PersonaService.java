@@ -6,6 +6,7 @@ import com.example.tienda101.personas.domain.Persona;
 import com.example.tienda101.personas.domain.PersonaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PersonaService {
@@ -20,8 +21,8 @@ public class PersonaService {
         return personaRepository.findAll();
     }
 
-    public Persona getItemById(Long id) {
-        return personaRepository.findById(id).orElse(null);
+    public Optional<Persona> getItemById(Long id) {
+        return personaRepository.findById(id);
     }
 
     public Persona createItem(Persona persona) {

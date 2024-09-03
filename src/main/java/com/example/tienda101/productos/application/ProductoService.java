@@ -1,6 +1,7 @@
 package com.example.tienda101.productos.application;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,8 @@ public class ProductoService {
         return productoRepository.findAll();
     }
 
-    public Producto getItemById(Long id) {
-        return productoRepository.findById(id).orElse(null);
+    public Optional<Producto> getItemById(Long id) {
+        return productoRepository.findById(id);
     }
 
     public Producto createItem(Producto producto) {

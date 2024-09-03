@@ -7,6 +7,7 @@ import com.example.tienda101.personas.application.PersonaService;
 import com.example.tienda101.personas.domain.Persona;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/personas")
@@ -21,7 +22,7 @@ public class PersonaController {
 	}
 
 	@GetMapping("/{id}")
-	public Persona getItemById(@PathVariable Long id) {
+	public Optional<Persona> getItemById(@PathVariable Long id) {
 		return personaService.getItemById(id);
 	}
 
