@@ -1,7 +1,8 @@
-package com.example.tienda101.ventas;
+package com.example.tienda101.ventas.domain;
 
-import com.example.tienda101.productos.Producto;
-import com.example.tienda101.personas.Persona;
+import com.example.tienda101.personas.domain.Persona;
+import com.example.tienda101.productos.domain.Producto;
+
 import jakarta.persistence.*;
 import lombok.Data;
 

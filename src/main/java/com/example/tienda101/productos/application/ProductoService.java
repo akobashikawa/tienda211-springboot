@@ -1,15 +1,21 @@
-package com.example.tienda101.productos;
+package com.example.tienda101.productos.application;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.example.tienda101.productos.domain.Producto;
+import com.example.tienda101.productos.domain.ProductoRepository;
 
 @Service
 public class ProductoService {
 
-    @Autowired
-    private ProductoRepository productoRepository;
+	private final ProductoRepository productoRepository;
 
+    public ProductoService(ProductoRepository productoRepository) {
+        this.productoRepository = productoRepository;
+    }
+    
     public List<Producto> getItems() {
         return productoRepository.findAll();
     }

@@ -1,12 +1,13 @@
-package com.example.tienda101.ventas;
+package com.example.tienda101.ventas.application;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.tienda101.personas.Persona;
-import com.example.tienda101.personas.PersonaRepository;
-import com.example.tienda101.productos.Producto;
-import com.example.tienda101.productos.ProductoRepository;
+import com.example.tienda101.personas.domain.Persona;
+import com.example.tienda101.personas.domain.PersonaRepository;
+import com.example.tienda101.productos.domain.Producto;
+import com.example.tienda101.productos.domain.ProductoRepository;
+import com.example.tienda101.ventas.domain.Venta;
+import com.example.tienda101.ventas.domain.VentaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,14 +15,17 @@ import java.util.List;
 @Service
 public class VentaService {
 
-    @Autowired
-    private VentaRepository ventaRepository;
+	private final VentaRepository ventaRepository;
     
-    @Autowired
-    private ProductoRepository productoRepository;
+    private final ProductoRepository productoRepository;
 
-    @Autowired
-    private PersonaRepository personaRepository;
+    private final PersonaRepository personaRepository;
+    
+    public VentaService(VentaRepository ventaRepository, ProductoRepository productoRepository, PersonaRepository personaRepository) {
+        this.ventaRepository = ventaRepository;
+		this.productoRepository = productoRepository;
+		this.personaRepository = personaRepository;
+    }
 
     public List<Venta> getItems() {
         return ventaRepository.findAll();

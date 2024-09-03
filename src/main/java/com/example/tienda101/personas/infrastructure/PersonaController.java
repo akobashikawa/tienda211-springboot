@@ -1,7 +1,10 @@
-package com.example.tienda101.personas;
+package com.example.tienda101.personas.infrastructure;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.tienda101.personas.application.PersonaService;
+import com.example.tienda101.personas.domain.Persona;
 
 import java.util.List;
 

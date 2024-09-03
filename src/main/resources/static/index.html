@@ -203,7 +203,6 @@
                     <th>costo</th>
                     <th>precio</th>
                     <th>cantidad</th>
-                    <th>ganancia</th>
                     <th>acciones</th>
                 </tr>
             </thead>
@@ -216,7 +215,6 @@
                     <td>{{ venta.producto.costo }}</td>
                     <td>{{ venta.precio }}</td>
                     <td>{{ venta.cantidad }}</td>
-                    <td>{{ venta.ganancia }}</td>
                     <td>
                         <button @click="openModificarVentaDialog(venta.id)">Modificar</button>
                     </td>
