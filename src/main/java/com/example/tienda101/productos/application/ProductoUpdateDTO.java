@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class ProductoUpdateDTO {
 	private String nombre;
+	private BigDecimal costo;
 	private BigDecimal precio;
 	private Integer cantidad;
 }

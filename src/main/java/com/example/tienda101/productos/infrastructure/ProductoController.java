@@ -38,13 +38,15 @@ public class ProductoController {
     	if (productoDTO.getNombre() != null) {
             producto.setNombre(productoDTO.getNombre());
         }
+    	if (productoDTO.getCosto() != null) {
+    		producto.setCosto(productoDTO.getCosto());
+    	}
         if (productoDTO.getPrecio() != null) {
             producto.setPrecio(productoDTO.getPrecio());
         }
         if (productoDTO.getCantidad() != null) {
             producto.setCantidad(productoDTO.getCantidad());
         }
-
         return productoService.updateItem(id, producto);
     }
 

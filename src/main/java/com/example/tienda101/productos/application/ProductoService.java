@@ -34,11 +34,14 @@ public class ProductoService {
     	if (producto.getNombre() != null) {
     		found.setNombre(producto.getNombre());
     	}
-    	if (producto.getCantidad() != null) {
-    		found.setCantidad(producto.getCantidad());
+    	if (producto.getCosto() != null) {
+    		found.setCosto(producto.getCosto());
     	}
     	if (producto.getPrecio() != null) {
     		found.setPrecio(producto.getPrecio());
+    	}
+    	if (producto.getCantidad() != null) {
+    		found.setCantidad(producto.getCantidad());
     	}
         return productoRepository.save(found);
     }
