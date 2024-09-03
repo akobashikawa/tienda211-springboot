@@ -1,6 +1,7 @@
 package com.example.tienda101.ventas.application;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tienda101.personas.domain.Persona;
 import com.example.tienda101.personas.domain.PersonaRepository;
@@ -35,41 +36,42 @@ public class VentaService {
         return ventaRepository.findById(id).orElse(null);
     }
     
-    public Venta createItem(VentaDTO ventaDTO) {
-    	Producto producto = productoRepository.findById(ventaDTO.getProducto_id())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        Persona persona = personaRepository.findById(ventaDTO.getPersona_id())
-                .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
-        
-        Venta venta = new Venta();
-        venta.setProducto(producto);
-        venta.setPersona(persona);
-        venta.setPrecio(ventaDTO.getPrecio());
-        venta.setCantidad(ventaDTO.getCantidad());
-        venta.setFecha(LocalDate.now());
-
-        return ventaRepository.save(venta);
+    public Venta createItem(Venta venta) {
+    	return this.saveItem(venta);
     }
 
-    public Venta updateItem(Long id, VentaDTO ventaDTO) {
-    	ventaDTO.setId(id);
-    	
-    	Producto producto = productoRepository.findById(ventaDTO.getProducto_id())
+    public Venta updateItem(Long id, Venta venta) {
+    	venta.setId(id);
+        return this.saveItem(venta);
+    }
+    
+    @Transactional
+    public Venta saveItem(Venta venta) {
+    	Producto producto = productoRepository.findById(venta.getProducto().getId())
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        Persona persona = personaRepository.findById(ventaDTO.getPersona_id())
+        Persona persona = personaRepository.findById(venta.getPersona().getId())
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
         
-        Venta venta = new Venta();
         venta.setProducto(producto);
         venta.setPersona(persona);
-        venta.setPrecio(ventaDTO.getPrecio());
-        venta.setCantidad(ventaDTO.getCantidad());
         venta.setFecha(LocalDate.now());
+        
+        Venta savedVenta = ventaRepository.save(venta);
+        
+        decreaseProductQuantity(producto, venta.getCantidad());
 
-        return ventaRepository.save(venta);
+        return savedVenta;
     }
 
     public void deleteItemById(Long id) {
         ventaRepository.deleteById(id);
+    }
+    
+    private void decreaseProductQuantity(Producto producto, int quantity) {
+        if (producto.getCantidad() < quantity) {
+            throw new RuntimeException("Cantidad insuficiente para el producto " + producto.getId());
+        }
+        producto.setCantidad(producto.getCantidad() - quantity);
+        productoRepository.save(producto);
     }
 }
