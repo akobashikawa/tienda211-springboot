@@ -35,4 +35,9 @@ public class ProductoJpaRepository implements ProductoRepository {
     public void deleteById(Long id) {
         jpaProductoRepository.deleteById(id);
     }
+
+	@Override
+	public boolean existsById(Long id) {
+		return jpaProductoRepository.existsById(id);
+	}
 }

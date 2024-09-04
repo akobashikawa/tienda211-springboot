@@ -21,9 +21,8 @@ public class ProductoService {
 		return productoRepository.findAll();
 	}
 
-	public Producto getItemById(Long id) {
-		return productoRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+	public Optional<Producto> getItemById(Long id) {
+		return productoRepository.findById(id);
 	}
 
 	public Producto createItem(Producto producto) {
@@ -33,9 +32,6 @@ public class ProductoService {
 	public Producto updateItem(Long id, Producto producto) {
 		Producto found = productoRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-		if (found == null) {
-			return null;
-		}
 		if (producto.getNombre() != null) {
 			found.setNombre(producto.getNombre());
 		}
@@ -52,6 +48,9 @@ public class ProductoService {
 	}
 
 	public void deleteItemById(Long id) {
-		productoRepository.deleteById(id);
+		if (!productoRepository.existsById(id)) {
+	        throw new RuntimeException("Producto con ID " + id + " no encontrado");
+	    }
+	    productoRepository.deleteById(id);
 	}
 }

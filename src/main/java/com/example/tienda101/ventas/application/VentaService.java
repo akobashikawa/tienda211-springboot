@@ -12,6 +12,7 @@ import com.example.tienda101.ventas.domain.VentaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VentaService {
@@ -31,8 +32,8 @@ public class VentaService {
         return ventaRepository.findAll();
     }
 
-    public Venta getItemById(Long id) {
-        return ventaRepository.findById(id).orElse(null);
+    public Optional<Venta> getItemById(Long id) {
+        return ventaRepository.findById(id);
     }
     
     public Venta createItem(VentaDTO ventaDTO) {
@@ -46,7 +47,8 @@ public class VentaService {
     
     @Transactional
     public Venta saveItem(VentaDTO ventaDTO) {
-    	Producto producto = productoService.getItemById(ventaDTO.getProducto_id());
+    	Producto producto = productoService.getItemById(ventaDTO.getProducto_id())
+    			.orElseThrow(() -> new RuntimeException("Producto no encontrado"));
     	Persona persona = personaService.getItemById(ventaDTO.getPersona_id())
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
         
