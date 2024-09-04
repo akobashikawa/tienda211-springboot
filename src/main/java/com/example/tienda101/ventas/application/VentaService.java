@@ -35,24 +35,26 @@ public class VentaService {
         return ventaRepository.findById(id).orElse(null);
     }
     
-    public Venta createItem(Venta venta) {
-    	return this.saveItem(venta);
+    public Venta createItem(VentaDTO ventaDTO) {
+    	return this.saveItem(ventaDTO);
     }
 
-    public Venta updateItem(Long id, Venta venta) {
-    	venta.setId(id);
-        return this.saveItem(venta);
+    public Venta updateItem(Long id, VentaDTO ventaDTO) {
+    	ventaDTO.setId(id);
+        return this.saveItem(ventaDTO);
     }
     
     @Transactional
-    public Venta saveItem(Venta venta) {
-    	Producto producto = productoService.getItemById(venta.getProducto().getId())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        Persona persona = personaService.getItemById(venta.getPersona().getId())
+    public Venta saveItem(VentaDTO ventaDTO) {
+    	Producto producto = productoService.getItemById(ventaDTO.getProducto_id());
+    	Persona persona = personaService.getItemById(ventaDTO.getPersona_id())
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
         
+    	Venta venta = new Venta();
         venta.setProducto(producto);
         venta.setPersona(persona);
+        venta.setPrecio(ventaDTO.getPrecio());
+        venta.setCantidad(ventaDTO.getCantidad());
         venta.setFecha(LocalDate.now());
         
         Venta savedVenta = ventaRepository.save(venta);

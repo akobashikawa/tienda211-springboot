@@ -1,10 +1,11 @@
 package com.example.tienda101.productos.infrastructure;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.tienda101.productos.application.ProductoService;
-import com.example.tienda101.productos.application.ProductoUpdateDTO;
 import com.example.tienda101.productos.domain.Producto;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class ProductoController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Producto> getItemById(@PathVariable Long id) {
+    public Producto getItemById(@PathVariable Long id) {
         return productoService.getItemById(id);
     }
 
@@ -33,20 +34,7 @@ public class ProductoController {
     }
 
     @PutMapping("/{id}")
-    public Producto updateItem(@PathVariable Long id, @RequestBody ProductoUpdateDTO productoDTO) {
-    	Producto producto = new Producto();
-    	if (productoDTO.getNombre() != null) {
-            producto.setNombre(productoDTO.getNombre());
-        }
-    	if (productoDTO.getCosto() != null) {
-    		producto.setCosto(productoDTO.getCosto());
-    	}
-        if (productoDTO.getPrecio() != null) {
-            producto.setPrecio(productoDTO.getPrecio());
-        }
-        if (productoDTO.getCantidad() != null) {
-            producto.setCantidad(productoDTO.getCantidad());
-        }
+    public Producto updateItem(@PathVariable Long id, @RequestBody Producto producto) {
         return productoService.updateItem(id, producto);
     }
 

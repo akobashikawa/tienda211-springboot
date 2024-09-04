@@ -13,40 +13,45 @@ public class ProductoService {
 
 	private final ProductoRepository productoRepository;
 
-    public ProductoService(ProductoRepository productoRepository) {
-        this.productoRepository = productoRepository;
-    }
-    
-    public List<Producto> getItems() {
-        return productoRepository.findAll();
-    }
+	public ProductoService(ProductoRepository productoRepository) {
+		this.productoRepository = productoRepository;
+	}
 
-    public Optional<Producto> getItemById(Long id) {
-        return productoRepository.findById(id);
-    }
+	public List<Producto> getItems() {
+		return productoRepository.findAll();
+	}
 
-    public Producto createItem(Producto producto) {
-        return productoRepository.save(producto);
-    }
-    
-    public Producto updateItem(Long id, Producto producto) {
-    	Producto found = productoRepository.findById(id).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-    	if (producto.getNombre() != null) {
-    		found.setNombre(producto.getNombre());
-    	}
-    	if (producto.getCosto() != null) {
-    		found.setCosto(producto.getCosto());
-    	}
-    	if (producto.getPrecio() != null) {
-    		found.setPrecio(producto.getPrecio());
-    	}
-    	if (producto.getCantidad() != null) {
-    		found.setCantidad(producto.getCantidad());
-    	}
-        return productoRepository.save(found);
-    }
+	public Producto getItemById(Long id) {
+		return productoRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+	}
 
-    public void deleteItemById(Long id) {
-        productoRepository.deleteById(id);
-    }
+	public Producto createItem(Producto producto) {
+		return productoRepository.save(producto);
+	}
+
+	public Producto updateItem(Long id, Producto producto) {
+		Producto found = productoRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+		if (found == null) {
+			return null;
+		}
+		if (producto.getNombre() != null) {
+			found.setNombre(producto.getNombre());
+		}
+		if (producto.getCosto() != null) {
+			found.setCosto(producto.getCosto());
+		}
+		if (producto.getPrecio() != null) {
+			found.setPrecio(producto.getPrecio());
+		}
+		if (producto.getCantidad() != null) {
+			found.setCantidad(producto.getCantidad());
+		}
+		return productoRepository.save(found);
+	}
+
+	public void deleteItemById(Long id) {
+		productoRepository.deleteById(id);
+	}
 }

@@ -32,30 +32,12 @@ public class VentaController {
 
     @PostMapping
     public Venta createItem(@RequestBody VentaDTO ventaDTO) {
-    	Venta venta = new Venta();
-    	Producto producto = new Producto();
-    	producto.setId(ventaDTO.getProducto_id());
-    	Persona persona = new Persona();
-    	persona.setId(ventaDTO.getPersona_id());
-        venta.setProducto(producto);
-        venta.setPersona(persona);
-        venta.setPrecio(ventaDTO.getPrecio());
-        venta.setCantidad(ventaDTO.getCantidad());
-        return ventaService.createItem(venta);
+        return ventaService.createItem(ventaDTO);
     }
 
     @PutMapping("/{id}")
     public Venta updateItem(@PathVariable Long id, @RequestBody VentaDTO ventaDTO) {
-    	Venta venta = new Venta();
-    	Producto producto = new Producto();
-    	producto.setId(ventaDTO.getProducto_id());
-    	Persona persona = new Persona();
-    	persona.setId(ventaDTO.getPersona_id());
-        venta.setProducto(producto);
-        venta.setPersona(persona);
-        venta.setPrecio(ventaDTO.getPrecio());
-        venta.setCantidad(ventaDTO.getCantidad());
-        return ventaService.updateItem(id, venta);
+        return ventaService.updateItem(id, ventaDTO);
     }
 
     @DeleteMapping("/{id}")
