@@ -11,6 +11,7 @@ import com.example.tienda101.ventas.domain.Venta;
 import com.example.tienda101.ventas.domain.VentaRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +58,7 @@ public class VentaService {
         venta.setPersona(persona);
         venta.setPrecio(ventaDTO.getPrecio());
         venta.setCantidad(ventaDTO.getCantidad());
-        venta.setFecha(LocalDate.now());
+        venta.setFechaHora(LocalDateTime.now());
         
         Venta savedVenta = ventaRepository.save(venta);
         

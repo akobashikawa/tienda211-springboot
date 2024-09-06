@@ -192,6 +192,8 @@
 
         <button @click="getVentas()">Traer todas</button>
         <button @click="openIngresarVentaDialog()">Ingresar Venta</button>
+        
+        {{ ventas }}
 
         <table>
             <thead>
@@ -209,7 +211,7 @@
             <tbody>
                 <tr v-for="venta of ventas">
                     <td>{{ venta.id }}</td>
-                    <td>{{ formatDate(venta.fecha) }}</td>
+                    <td>{{ formatDate(venta.fechaHora) }}</td>
                     <td>{{ venta.persona.nombre }}</td>
                     <td>{{ venta.producto.nombre }}</td>
                     <td>{{ venta.producto.costo }}</td>

@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ventas")
@@ -30,7 +31,7 @@ public class Venta {
 	
 	private Integer cantidad;
 	
-	@Column(name = "fecha", nullable = false, updatable = false)
-	private LocalDate fecha = LocalDate.now();
+	@Column(name = "fecha_hora", nullable = false, updatable = false)
+    private LocalDateTime fechaHora = LocalDateTime.now();
 
 }
