@@ -11,4 +11,6 @@ public interface PersonaRepository {
 	Persona save(Persona producto);
 
 	void deleteById(Long id);
+
+	Object existsById(Long id);
 }
