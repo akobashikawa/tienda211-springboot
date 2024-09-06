@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+import java.util.Optional;
+
 import com.example.tienda101.personas.application.PersonaService;
 import com.example.tienda101.personas.domain.Persona;
 import com.example.tienda101.personas.domain.PersonaRepository;

@@ -35,4 +35,9 @@ public class PersonaJpaRepository implements PersonaRepository {
     public void deleteById(Long id) {
         jpaPersonaRepository.deleteById(id);
     }
+
+	@Override
+	public Object existsById(Long id) {
+		return jpaPersonaRepository.existsById(id);
+	}
 }
