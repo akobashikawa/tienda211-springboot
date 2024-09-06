@@ -11,5 +11,16 @@ public class VentaDTO {
     private Long producto_id;
     private BigDecimal precio;
     private int cantidad;
+    
+    public VentaDTO() {
+    }
+    
+    public VentaDTO(Long persona_id, Long producto_id, BigDecimal precio, int cantidad) {
+        this.persona_id = persona_id;
+        this.producto_id = producto_id;
+        this.precio = precio;
+        this.cantidad = cantidad;
+    }
+
 
 }
