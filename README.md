@@ -29,6 +29,8 @@ graph TD
 ```sh
 mvn clean install
 mvn spring-boot:run
+mvn spring-boot:run -Dspring.profiles.active=dev
+mvn test -Dspring.profiles.active=test
 ```
 
 http://localhost:8080/
