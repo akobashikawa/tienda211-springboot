@@ -2,315 +2,292 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda 101</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tienda 101</title>
 
-    <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css">
+<link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css">
 
-    <style>
-
-    </style>
+<style>
+</style>
 </head>
 
 <body>
-    <div id="app">
-        <h1>Tienda 101</h1>
-        <div class="flash danger" v-if="errorMessage">{{ errorMessage }}</div>
+	<div id="app">
+		<h1>Tienda 101</h1>
+		<div class="flash danger" v-if="errorMessage">{{ errorMessage }}</div>
 
-        <h2>Productos</h2>
+		<h2>Productos</h2>
 
-        <button @click="getProductos()">Traer todos</button>
-        <button @click="openIngresarProductoDialog">Ingresar Producto</button>
+		<button @click="getProductos()">Traer todos</button>
+		<button @click="openIngresarProductoDialog">Ingresar Producto</button>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>nombre</th>
-                    <th>costo</th>
-                    <th>precio</th>
-                    <th>cantidad</th>
-                    <th>acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="producto of productos">
-                    <td>{{ producto.id }}</td>
-                    <td>{{ producto.nombre }}</td>
-                    <td>{{ producto.costo }}</td>
-                    <td>{{ producto.precio }}</td>
-                    <td>{{ producto.cantidad }}</td>
-                    <td>
-                        <button @click="openModificarProductoDialog(producto.id)">Modificar</button>
-                        <button @click="openIngresarVentaDialog({productoId: producto.id})">Vender</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+		<table>
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>nombre</th>
+					<th>costo</th>
+					<th>precio</th>
+					<th>cantidad</th>
+					<th>acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="producto of productos">
+					<td>{{ producto.id }}</td>
+					<td>{{ producto.nombre }}</td>
+					<td>{{ producto.costo }}</td>
+					<td>{{ producto.precio }}</td>
+					<td>{{ producto.cantidad }}</td>
+					<td>
+						<button @click="openModificarProductoDialog(producto.id)">Modificar</button>
+						<button
+							@click="openIngresarVentaDialog({productoId: producto.id})">Vender</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 
-        <dialog ref="ingresarProductoDialog">
-            <header>
-                <h2>Ingresar Producto</h2>
-            </header>
-            <form method="dialog">
-                <legend>Nuevo producto</legend>
-                <fieldset>
-                    <label>
-                        Nombre:
-                        <input type="text" placeholder="" v-model="producto.nombre">
-                    </label>
-                    <label>
-                        Costo:
-                        <input type="number" step="0.10" min="0" placeholder="0.00" v-model="producto.costo">
-                    </label>
-                    <label>
-                        Precio:
-                        <input type="number" step="0.10" min="0" placeholder="0.00" v-model="producto.precio">
-                    </label>
-                    <label>
-                        Cantidad:
-                        <input type="number" step="1" min="0" placeholder="1" v-model="producto.cantidad">
-                    </label>
-                </fieldset>
-                <footer>
-                    <button type="reset" @click="closeIngresarProductoDialog">Cancelar</button>
-                    <button type="submit" @click="createProducto">Guardar</button>
-                </footer>
+		<dialog ref="ingresarProductoDialog"> <header>
+			<h2>Ingresar Producto</h2>
+		</header>
+		<form method="dialog">
+			<legend>Nuevo producto</legend>
+			<fieldset>
+				<label> Nombre: <input type="text" placeholder=""
+					v-model="producto.nombre">
+				</label> <label> Costo: <input type="number" step="0.10" min="0"
+					placeholder="0.00" v-model="producto.costo">
+				</label> <label> Precio: <input type="number" step="0.10" min="0"
+					placeholder="0.00" v-model="producto.precio">
+				</label> <label> Cantidad: <input type="number" step="1" min="0"
+					placeholder="1" v-model="producto.cantidad">
+				</label>
+			</fieldset>
+			<footer>
+				<button type="reset" @click="closeIngresarProductoDialog">Cancelar</button>
+				<button type="submit" @click="createProducto">Guardar</button>
+			</footer>
 
-            </form>
-        </dialog>
+		</form>
+		</dialog>
 
-        <dialog ref="modificarProductoDialog">
-            <header>
-                <h2>Modificar Producto</h2>
-            </header>
-            <form method="dialog">
-                <fieldset>
-                    <legend>Producto</legend>
-                    <label>
-                        ID: {{ producto.id }}
-                        <input type="hidden" placeholder="" v-model="producto.id">
-                    </label>
-                    <label>
-                        Nombre:
-                        <input type="text" placeholder="" v-model="producto.nombre">
-                    </label>
-                    <label>
-                        Costo:
-                        <input type="number" step="0.10" min="0" placeholder="0.00" v-model="producto.costo">
-                    </label>
-                    <label>
-                        Precio:
-                        <input type="number" step="0.10" min="0" placeholder="0.00" v-model="producto.precio">
-                    </label>
-                    <label>
-                        Cantidad:
-                        <input type="number" step="1" min="0" placeholder="1" v-model="producto.cantidad">
-                    </label>
-                </fieldset>
-                <footer>
-                    <button type="reset" @click="closeModificarProductoDialog">Cancelar</button>
-                    <button type="submit" @click="updateProducto">Guardar</button>
-                </footer>
+		<dialog ref="modificarProductoDialog"> <header>
+			<h2>Modificar Producto</h2>
+		</header>
+		<form method="dialog">
+			<fieldset>
+				<legend>Producto</legend>
+				<label> ID: {{ producto.id }} <input type="hidden"
+					placeholder="" v-model="producto.id">
+				</label> <label> Nombre: <input type="text" placeholder=""
+					v-model="producto.nombre">
+				</label> <label> Costo: <input type="number" step="0.10" min="0"
+					placeholder="0.00" v-model="producto.costo">
+				</label> <label> Precio: <input type="number" step="0.10" min="0"
+					placeholder="0.00" v-model="producto.precio">
+				</label> <label> Cantidad: <input type="number" step="1" min="0"
+					placeholder="1" v-model="producto.cantidad">
+				</label>
+			</fieldset>
+			<footer>
+				<button type="reset" @click="closeModificarProductoDialog">Cancelar</button>
+				<button type="submit" @click="updateProducto">Guardar</button>
+			</footer>
 
-            </form>
-        </dialog>
+		</form>
+		</dialog>
 
 
-        <h2>Personas</h2>
+		<h2>Personas</h2>
 
-        <button @click="getPersonas()">Traer todas</button>
-        <button @click="openIngresarPersonaDialog">Ingresar Persona</button>
+		<button @click="getPersonas()">Traer todas</button>
+		<button @click="openIngresarPersonaDialog">Ingresar Persona</button>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>nombre</th>
-                    <th>acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="persona of personas">
-                    <td>{{ persona.id }}</td>
-                    <td>{{ persona.nombre }}</td>
-                    <td>
-                        <button @click="openModificarPersonaDialog(persona.id)">Modificar</button>
-                        <button @click="openIngresarVentaDialog({personaId: persona.id})">Venderle</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+		<table>
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>nombre</th>
+					<th>acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="persona of personas">
+					<td>{{ persona.id }}</td>
+					<td>{{ persona.nombre }}</td>
+					<td>
+						<button @click="openModificarPersonaDialog(persona.id)">Modificar</button>
+						<button @click="openIngresarVentaDialog({personaId: persona.id})">Venderle</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 
-        <dialog ref="ingresarPersonaDialog">
-            <header>
-                <h2>Ingresar Persona</h2>
-            </header>
-            <form method="dialog">
-                <legend>Nueva persona</legend>
-                <fieldset>
-                    <label>
-                        Nombre:
-                        <input type="text" placeholder="" v-model="persona.nombre">
-                    </label>
-                </fieldset>
-                <footer>
-                    <button type="reset" @click="closeIngresarPersonaDialog">Cancelar</button>
-                    <button type="submit" @click="createPersona">Guardar</button>
-                </footer>
+		<dialog ref="ingresarPersonaDialog"> <header>
+			<h2>Ingresar Persona</h2>
+		</header>
+		<form method="dialog">
+			<legend>Nueva persona</legend>
+			<fieldset>
+				<label> Nombre: <input type="text" placeholder=""
+					v-model="persona.nombre">
+				</label>
+			</fieldset>
+			<footer>
+				<button type="reset" @click="closeIngresarPersonaDialog">Cancelar</button>
+				<button type="submit" @click="createPersona">Guardar</button>
+			</footer>
 
-            </form>
-        </dialog>
+		</form>
+		</dialog>
 
-        <dialog ref="modificarPersonaDialog">
-            <header>
-                <h2>Modificar Persona</h2>
-            </header>
-            <form method="dialog">
-                <fieldset>
-                    <legend>Persona</legend>
-                    <label>
-                        ID: {{ persona.id }}
-                        <input type="hidden" placeholder="" v-model="persona.id">
-                    </label>
-                    <label>
-                        Nombre:
-                        <input type="text" placeholder="" v-model="persona.nombre">
-                    </label>
-                </fieldset>
-                <footer>
-                    <button type="reset" @click="closeModificarPersonaDialog">Cancelar</button>
-                    <button type="submit" @click="updatePersona">Guardar</button>
-                </footer>
+		<dialog ref="modificarPersonaDialog"> <header>
+			<h2>Modificar Persona</h2>
+		</header>
+		<form method="dialog">
+			<fieldset>
+				<legend>Persona</legend>
+				<label> ID: {{ persona.id }} <input type="hidden"
+					placeholder="" v-model="persona.id">
+				</label> <label> Nombre: <input type="text" placeholder=""
+					v-model="persona.nombre">
+				</label>
+			</fieldset>
+			<footer>
+				<button type="reset" @click="closeModificarPersonaDialog">Cancelar</button>
+				<button type="submit" @click="updatePersona">Guardar</button>
+			</footer>
 
-            </form>
-        </dialog>
+		</form>
+		</dialog>
 
 
-        <h2>Ventas</h2>
+		<h2>Ventas</h2>
 
-        <button @click="getVentas()">Traer todas</button>
-        <button @click="openIngresarVentaDialog()">Ingresar Venta</button>
-        
-        {{ ventas }}
+		<button @click="getVentas()">Traer todas</button>
+		<button @click="openIngresarVentaDialog()">Ingresar Venta</button>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>fecha</th>
-                    <th>persona</th>
-                    <th>producto</th>
-                    <th>costo</th>
-                    <th>precio</th>
-                    <th>cantidad</th>
-                    <th>acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="venta of ventas">
-                    <td>{{ venta.id }}</td>
-                    <td>{{ formatDate(venta.fechaHora) }}</td>
-                    <td>{{ venta.persona.nombre }}</td>
-                    <td>{{ venta.producto.nombre }}</td>
-                    <td>{{ venta.producto.costo }}</td>
-                    <td>{{ venta.precio }}</td>
-                    <td>{{ venta.cantidad }}</td>
-                    <td>
-                        <button @click="openModificarVentaDialog(venta.id)">Modificar</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+		<table>
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>fecha</th>
+					<th>persona</th>
+					<th>producto</th>
+					<th>costo</th>
+					<th>precio</th>
+					<th>cantidad</th>
+					<th>acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="venta of ventas">
+					<td>{{ venta.id }}</td>
+					<td>{{ formatDate(venta.fechaHora) }}</td>
+					<td>{{ venta.persona.nombre }}</td>
+					<td>{{ venta.producto.nombre }}</td>
+					<td>{{ venta.producto.costo }}</td>
+					<td>{{ venta.precio }}</td>
+					<td>{{ venta.cantidad }}</td>
+					<td>
+						<button @click="openModificarVentaDialog(venta.id)">Modificar</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 
-        <dialog ref="ingresarVentaDialog">
-            <header>
-                <h2>Ingresar Venta</h2>
-            </header>
-            <form method="dialog">
-                <fieldset>
-                    <legend>Persona</legend>
-                    <label>
-                        <select v-model="venta.persona_id" @change="selectPersona">
-                            <option value="0">- Seleccionar -</option>
-                            <option :value="persona.id" v-for="persona of personas">{{ persona.nombre }}</option>
-                        </select>
-                    </label>
-                </fieldset>
-                <fieldset>
-                    <legend>Producto</legend>
-                    <label>
-                        <select v-model="venta.producto_id" @change="selectProducto">
-                            <option value="0">- Seleccionar -</option>
-                            <option :value="producto.id" v-for="producto of productos">{{ producto.nombre }}</option>
-                        </select>
-                    </label>
-                    <label>
-                        Precio:
-                        <input type="number" step="0.10" min="0" placeholder="0.00" v-model="venta.precio">
-                    </label>
-                    <label>
-                        Cantidad:
-                        <input type="number" step="1" min="0" placeholder="1" v-model="venta.cantidad">
-                    </label>
-                </fieldset>
-                <footer>
-                    <button type="reset" @click="closeIngresarVentaDialog">Cancelar</button>
-                    <button type="submit" @click="createVenta">Vender</button>
-                </footer>
+		<dialog ref="ingresarVentaDialog"> <header>
+			<h2>Ingresar Venta</h2>
+		</header>
+		<form method="dialog">
+			<fieldset>
+				<legend>Persona</legend>
+				<label> <select v-model="venta.persona_id"
+					@change="selectPersona">
+						<option value="0">- Seleccionar -</option>
+						<option :value="persona.id" v-for="persona of personas">{{
+							persona.nombre }}</option>
+				</select>
+				</label>
+			</fieldset>
+			<fieldset>
+				<legend>Producto</legend>
+				<label> <select v-model="venta.producto_id"
+					@change="selectProducto">
+						<option value="0">- Seleccionar -</option>
+						<option :value="producto.id" v-for="producto of productos">{{
+							producto.nombre }}</option>
+				</select>
+				</label> <label> Precio: <input type="number" step="0.10" min="0"
+					placeholder="0.00" v-model="venta.precio">
+				</label> <label> Cantidad: <input type="number" step="1" min="0"
+					placeholder="1" v-model="venta.cantidad">
+				</label>
+			</fieldset>
+			<footer>
+				<button type="reset" @click="closeIngresarVentaDialog">Cancelar</button>
+				<button type="submit" @click="createVenta">Vender</button>
+			</footer>
 
-            </form>
-        </dialog>
+		</form>
+		</dialog>
 
-        <dialog ref="modificarVentaDialog">
-            <header>
-                <h2>Modificar Venta</h2>
-            </header>
-            <form method="dialog">
-                <fieldset>
-                    <legend>Persona</legend>
-                    <label>
-                        <select v-model="venta.persona_id" @change="selectPersona">
-                            <option value="0">- Seleccionar -</option>
-                            <option :value="persona.id" v-for="persona of personas">{{ persona.nombre }}</option>
-                        </select>
-                    </label>
-                </fieldset>
-                <fieldset>
-                    <legend>Producto</legend>
-                    <label>
-                        <select v-model="venta.producto_id" @change="selectProducto">
-                            <option value="0">- Seleccionar -</option>
-                            <option :value="producto.id" v-for="producto of productos">{{ producto.nombre }}</option>
-                        </select>
-                    </label>
-                    <label>
-                        Precio:
-                        <input type="number" step="0.10" min="0" placeholder="0.00" v-model="venta.precio">
-                    </label>
-                    <label>
-                        Cantidad:
-                        <input type="number" step="1" min="0" placeholder="1" v-model="venta.cantidad">
-                    </label>
-                </fieldset>
-                <footer>
-                    <button type="reset" @click="closeModificarVentaDialog">Cancelar</button>
-                    <button type="submit" @click="updateVenta">Guardar</button>
-                </footer>
+		<dialog ref="modificarVentaDialog"> <header>
+			<h2>Modificar Venta</h2>
+		</header>
+		<form method="dialog">
+			<fieldset>
+				<legend>Persona</legend>
+				<label> <select v-model="venta.persona_id"
+					@change="selectPersona">
+						<option value="0">- Seleccionar -</option>
+						<option :value="persona.id" v-for="persona of personas">{{
+							persona.nombre }}</option>
+				</select>
+				</label>
+			</fieldset>
+			<fieldset>
+				<legend>Producto</legend>
+				<label> <select v-model="venta.producto_id"
+					@change="selectProducto">
+						<option value="0">- Seleccionar -</option>
+						<option :value="producto.id" v-for="producto of productos">{{
+							producto.nombre }}</option>
+				</select>
+				</label> <label> Precio: <input type="number" step="0.10" min="0"
+					placeholder="0.00" v-model="venta.precio">
+				</label> <label> Cantidad: <input type="number" step="1" min="0"
+					placeholder="1" v-model="venta.cantidad">
+				</label>
+			</fieldset>
+			<footer>
+				<button type="reset" @click="closeModificarVentaDialog">Cancelar</button>
+				<button type="submit" @click="updateVenta">Guardar</button>
+			</footer>
 
-            </form>
-        </dialog>
+		</form>
+		</dialog>
 
-    </div>
+	</div>
 
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
 
-    <script>
-        const productosServiceUrl = `http://localhost:8080/api/productos`;
-        const personasServiceUrl = `http://localhost:8080/api/personas`;
-        const ventasServiceUrl = `http://localhost:8080/api/ventas`;
+	<script>
+	    // Obtener la URL base de la página actual
+	    const baseUrl = window.location.origin;
+	
+	    // Construir las URLs de los servicios
+	    const productosServiceUrl = `${baseUrl}/api/productos`;
+	    const personasServiceUrl = `${baseUrl}/api/personas`;
+	    const ventasServiceUrl = `${baseUrl}/api/ventas`;
+	
+	    // Puedes usar estas URLs para tus peticiones, por ejemplo:
+	    console.log('Productos URL:', productosServiceUrl);
+	    console.log('Personas URL:', personasServiceUrl);
+	    console.log('Ventas URL:', ventasServiceUrl);
 
         const { createApp, ref, onMounted } = Vue;
 
