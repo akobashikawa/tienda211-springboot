@@ -60,4 +60,5 @@ public class VentaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
         }
     }
+    
 }

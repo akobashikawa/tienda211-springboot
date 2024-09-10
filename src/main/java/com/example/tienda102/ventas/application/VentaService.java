@@ -21,64 +21,77 @@ public class VentaService {
 
 	private final VentaRepository ventaRepository;
 	private final ProductoService productoService;
-    private final PersonaService personaService;
+	private final PersonaService personaService;
 	private ApplicationEventPublisher eventPublisher;
-    
-    public VentaService(VentaRepository ventaRepository, ProductoService productoService, PersonaService personaService, ApplicationEventPublisher eventPublisher) {
-        this.ventaRepository = ventaRepository;
-        this.productoService = productoService;
-        this.personaService = personaService;
-        this.eventPublisher = eventPublisher;
-    }
 
-    public List<Venta> getItems() {
-        return ventaRepository.findAll();
-    }
+	public VentaService(VentaRepository ventaRepository, ProductoService productoService, PersonaService personaService, ApplicationEventPublisher eventPublisher) {
+		this.ventaRepository = ventaRepository;
+		this.productoService = productoService;
+		this.personaService = personaService;
+		this.eventPublisher = eventPublisher;
+	}
 
-    public Optional<Venta> getItemById(Long id) {
-        return ventaRepository.findById(id);
-    }
-    
-    public Venta createItem(VentaDTO ventaDTO) {
-    	return this.saveItem(ventaDTO);
-    }
+	public List<Venta> getItems() {
+		return ventaRepository.findAll();
+	}
 
-    public Venta updateItem(Long id, VentaDTO ventaDTO) {
-    	ventaDTO.setId(id);
-        return this.saveItem(ventaDTO);
-    }
-    
-    @Transactional
-    public Venta saveItem(VentaDTO ventaDTO) {
-    	Producto producto = productoService.getItemById(ventaDTO.getProducto_id())
+	public Optional<Venta> getItemById(Long id) {
+		return ventaRepository.findById(id);
+	}
+
+	public Venta createItem(VentaDTO ventaDTO) {
+		Venta venta = new Venta();
+        Producto producto = productoService.getItemById(ventaDTO.getProducto_id())
     			.orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-    	Persona persona = personaService.getItemById(ventaDTO.getPersona_id())
+		Persona persona = personaService.getItemById(ventaDTO.getPersona_id())
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
-        
-    	Venta venta = new Venta();
-        venta.setProducto(producto);
-        venta.setPersona(persona);
-        venta.setPrecio(ventaDTO.getPrecio());
-        venta.setCantidad(ventaDTO.getCantidad());
-        venta.setFechaHora(LocalDateTime.now());
-        
-        Venta savedVenta = ventaRepository.save(venta);
-        
-//        decreaseProductQuantity(producto, venta.getCantidad());
-        eventPublisher.publishEvent(new VentaCreadaEvent(this, savedVenta));
+		
+//    	int nuevaCantidad = producto.getCantidad() - ventaDTO.getCantidad();
+//    	producto.setCantidad(nuevaCantidad);
+//    	productoService.updateItem(producto.getId(), producto);
+//    	productoService.decProductoCantidad(producto, ventaDTO.getCantidad());
+    	
+    	venta.setProducto(producto);
+    	venta.setPersona(persona);
+    	venta.setPrecio(ventaDTO.getPrecio());
+    	venta.setCantidad(ventaDTO.getCantidad());
+    	venta.setFechaHora(LocalDateTime.now());
+    	
+    	eventPublisher.publishEvent(new VentaCreateEvent(this, venta, producto));
+    	return ventaRepository.save(venta);
+	}
 
-        return savedVenta;
-    }
+	public Venta updateItem(Long id, VentaDTO ventaDTO) {
+		Venta venta = this.getItemById(id)
+        		.orElseThrow(() -> new RuntimeException("Venta no encontrada"));
+        Producto producto = productoService.getItemById(ventaDTO.getProducto_id())
+    			.orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+		Persona persona = personaService.getItemById(ventaDTO.getPersona_id())
+                .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+    	
+//    	int diferencia = ventaDTO.getCantidad() - venta.getCantidad();
+//    	int nuevaCantidad = producto.getCantidad() - diferencia;
+//    	producto.setCantidad(nuevaCantidad);
+//    	productoService.updateItem(producto.getId(), producto);
+//		productoService.decProductoCantidad(producto, ventaDTO.getCantidad(), venta.getCantidad());
+    	
+    	venta.setProducto(producto);
+    	venta.setPersona(persona);
+    	
+    	if (ventaDTO.getPrecio() != null) {
+    		venta.setPrecio(ventaDTO.getPrecio());
+    	}
+    	if (ventaDTO.getCantidad() != null) {
+    		venta.setCantidad(ventaDTO.getCantidad());
+    	}
+    	venta.setFechaHora(LocalDateTime.now());
+    	
+    	return ventaRepository.save(venta);
+	}
 
-    public void deleteItemById(Long id) {
-        ventaRepository.deleteById(id);
-    }
-    
-    private void decreaseProductQuantity(Producto producto, int quantity) {
-        if (producto.getCantidad() < quantity) {
-            throw new RuntimeException("Cantidad insuficiente para el producto " + producto.getId());
-        }
-        producto.setCantidad(producto.getCantidad() - quantity);
-        productoService.updateItem(producto.getId(), producto);
-    }
+	public void deleteItemById(Long id) {
+		ventaRepository.deleteById(id);
+	}
+	
+
 }

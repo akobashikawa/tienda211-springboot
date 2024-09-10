@@ -106,7 +106,8 @@ curl http://localhost:8080/api/ventas
 # create venta
 curl -X POST http://localhost:8080/api/ventas -H "Content-Type: application/json" -d '{"persona_id": 1, "producto_id": 1, "precio": 15, "cantidad": 1}'
 
-
+# update venta
+curl -X PUT http://localhost:8080/api/ventas/1 -H "Content-Type: application/json" -d '{"persona_id": 1, "producto_id": 1, "precio": 15, "cantidad": 3}'
 
 ```
 
