@@ -81,10 +81,14 @@ public class VentaService {
     	if (ventaDTO.getPrecio() != null) {
     		venta.setPrecio(ventaDTO.getPrecio());
     	}
+    	
+    	int cantidadAnterior = venta.getCantidad();
     	if (ventaDTO.getCantidad() != null) {
     		venta.setCantidad(ventaDTO.getCantidad());
     	}
     	venta.setFechaHora(LocalDateTime.now());
+    	
+    	eventPublisher.publishEvent(new VentaUpdateEvent(this, venta, producto, cantidadAnterior));
     	
     	return ventaRepository.save(venta);
 	}
