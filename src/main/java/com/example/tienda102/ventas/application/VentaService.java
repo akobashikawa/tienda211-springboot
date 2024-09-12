@@ -4,6 +4,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.tienda102.gateway.application.GenericEvent;
 import com.example.tienda102.personas.application.PersonaService;
 import com.example.tienda102.personas.domain.Persona;
 import com.example.tienda102.productos.application.ProductoService;
@@ -13,7 +14,9 @@ import com.example.tienda102.ventas.domain.VentaRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -57,7 +60,11 @@ public class VentaService {
     	venta.setCantidad(ventaDTO.getCantidad());
     	venta.setFechaHora(LocalDateTime.now());
     	
-    	eventPublisher.publishEvent(new VentaCreateEvent(this, venta, producto));
+//    	eventPublisher.publishEvent(new VentaCreateEvent(this, venta, producto));
+    	Map<String, Object> payload = new HashMap<>();
+    	payload.put("venta", venta);
+    	payload.put("producto", producto);
+    	eventPublisher.publishEvent(new GenericEvent(this, "ventaCreate", payload));
     	return ventaRepository.save(venta);
 	}
 
@@ -88,7 +95,12 @@ public class VentaService {
     	}
     	venta.setFechaHora(LocalDateTime.now());
     	
-    	eventPublisher.publishEvent(new VentaUpdateEvent(this, venta, producto, cantidadAnterior));
+//    	eventPublisher.publishEvent(new VentaUpdateEvent(this, venta, producto, cantidadAnterior));
+    	Map<String, Object> payload = new HashMap<>();
+    	payload.put("venta", venta);
+    	payload.put("producto", producto);
+    	payload.put("cantidadAnterior", cantidadAnterior);
+    	eventPublisher.publishEvent(new GenericEvent(this, "ventaUpdate", payload));
     	
     	return ventaRepository.save(venta);
 	}
