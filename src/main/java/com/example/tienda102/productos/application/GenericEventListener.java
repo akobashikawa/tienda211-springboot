@@ -21,20 +21,34 @@ public class GenericEventListener {
 
 	@EventListener
 	public void onGenericEvent(GenericEvent event) {
-		Venta venta = (Venta) event.getPayload().get("venta");
-		Producto producto = (Producto) event.getPayload().get("producto");
-		switch (event.getEventType()) {
+		String eventType = event.getEventType();
+		
+		switch (eventType) {
 			case "ventaCreate":
-				System.out.println("Crear nueva venta para el producto " + producto.getId() + ": " + producto.getNombre());
-				productoService.decProductoCantidad(producto, venta.getCantidad());
+				handleVentaCreate(event);
 				break;
 			case "ventaUpdate":
-				int cantidadAnterior = (int) event.getPayload().get("cantidadAnterior");
-				System.out.println("Actualizar venta " + venta.getId() + " para el producto " + producto.getId() + ": "
-						+ producto.getNombre());
-				productoService.decProductoCantidad(producto, venta.getCantidad(), cantidadAnterior);
+				handleVentaUpdate(event);
 				break;
+			default:
+	            System.out.println("Tipo de evento no reconocido: " + eventType);
 		}
+	}
+	
+	private void handleVentaCreate(GenericEvent event) {
+		Venta venta = (Venta) event.getPayload().get("venta");
+		Producto producto = (Producto) event.getPayload().get("producto");
+		System.out.println("Crear nueva venta para el producto " + producto.getId() + ": " + producto.getNombre());
+		productoService.decProductoCantidad(producto, venta.getCantidad());
+	}
+	
+	private void handleVentaUpdate(GenericEvent event) {
+		Venta venta = (Venta) event.getPayload().get("venta");
+		Producto producto = (Producto) event.getPayload().get("producto");
+		int cantidadAnterior = (int) event.getPayload().get("cantidadAnterior");
+		System.out.println("Actualizar venta " + venta.getId() + " para el producto " + producto.getId() + ": "
+				+ producto.getNombre());
+		productoService.decProductoCantidad(producto, venta.getCantidad(), cantidadAnterior);
 	}
 
 }
