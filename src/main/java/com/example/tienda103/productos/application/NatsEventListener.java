@@ -7,6 +7,8 @@ import io.nats.client.MessageHandler;
 
 import com.example.tienda103.productos.domain.Producto;
 import com.example.tienda103.ventas.domain.Venta;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -33,8 +35,6 @@ public class NatsEventListener {
 
     @PostConstruct
     public void init() throws Exception {
-//        subscribeToVentaCreateEvent();
-//        subscribeToVentaUpdateEvent();
         subscribeToEvent("venta.create", this::handleVentaCreateEvent);
         subscribeToEvent("venta.update", this::handleVentaUpdateEvent);
     }
@@ -43,11 +43,15 @@ public class NatsEventListener {
         Dispatcher dispatcher = natsConnection.createDispatcher(handler);
         dispatcher.subscribe(topic);
     }
+    
+    private Map<String, Object> getPayload(Message msg) throws JsonMappingException, JsonProcessingException {
+    	String json = new String(msg.getData());
+        return objectMapper.readValue(json, Map.class);
+    }
 
     private void handleVentaCreateEvent(Message msg) {
         try {
-        	String json = new String(msg.getData());
-            Map<String, Object> payload = objectMapper.readValue(json, Map.class);
+            Map<String, Object> payload = getPayload(msg);
             Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
             Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
 
@@ -61,8 +65,7 @@ public class NatsEventListener {
 
     private void handleVentaUpdateEvent(Message msg) {
         try {
-        	String json = new String(msg.getData());
-            Map<String, Object> payload = objectMapper.readValue(json, Map.class);
+        	Map<String, Object> payload = getPayload(msg);
             Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
             Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
             int cantidadAnterior = (int) payload.get("cantidadAnterior");
