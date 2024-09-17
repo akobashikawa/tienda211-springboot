@@ -12,9 +12,9 @@ import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.tienda102.personas.application.PersonaService;
-import com.example.tienda102.personas.domain.Persona;
-import com.example.tienda102.personas.domain.PersonaRepository;
+import com.example.tienda103.personas.application.PersonaService;
+import com.example.tienda103.personas.domain.Persona;
+import com.example.tienda103.personas.domain.PersonaRepository;
 
 @SpringBootTest
 public class PersonaSteps {

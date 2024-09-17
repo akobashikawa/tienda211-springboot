@@ -10,12 +10,12 @@ import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.tienda102.personas.application.PersonaService;
-import com.example.tienda102.personas.domain.Persona;
-import com.example.tienda102.productos.application.ProductoService;
-import com.example.tienda102.productos.domain.Producto;
-import com.example.tienda102.ventas.application.VentaDTO;
-import com.example.tienda102.ventas.application.VentaService;
+import com.example.tienda103.personas.application.PersonaService;
+import com.example.tienda103.personas.domain.Persona;
+import com.example.tienda103.productos.application.ProductoService;
+import com.example.tienda103.productos.domain.Producto;
+import com.example.tienda103.ventas.application.VentaDTO;
+import com.example.tienda103.ventas.application.VentaService;
 
 import java.math.BigDecimal;
 import java.util.Optional;

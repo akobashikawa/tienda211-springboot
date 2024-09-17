@@ -9,14 +9,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.example.tienda102.personas.application.PersonaService;
-import com.example.tienda102.personas.domain.Persona;
-import com.example.tienda102.productos.application.ProductoService;
-import com.example.tienda102.productos.domain.Producto;
-import com.example.tienda102.ventas.application.VentaDTO;
-import com.example.tienda102.ventas.application.VentaService;
-import com.example.tienda102.ventas.domain.Venta;
-import com.example.tienda102.ventas.domain.VentaRepository;
+import com.example.tienda103.personas.application.PersonaService;
+import com.example.tienda103.personas.domain.Persona;
+import com.example.tienda103.productos.application.ProductoService;
+import com.example.tienda103.productos.domain.Producto;
+import com.example.tienda103.ventas.application.VentaDTO;
+import com.example.tienda103.ventas.application.VentaService;
+import com.example.tienda103.ventas.domain.Venta;
+import com.example.tienda103.ventas.domain.VentaRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

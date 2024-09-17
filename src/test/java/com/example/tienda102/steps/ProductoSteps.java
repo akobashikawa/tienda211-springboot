@@ -10,9 +10,9 @@ import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.tienda102.productos.application.ProductoService;
-import com.example.tienda102.productos.domain.Producto;
-import com.example.tienda102.productos.domain.ProductoRepository;
+import com.example.tienda103.productos.application.ProductoService;
+import com.example.tienda103.productos.domain.Producto;
+import com.example.tienda103.productos.domain.ProductoRepository;
 
 import java.math.BigDecimal;
 import java.util.Optional;
