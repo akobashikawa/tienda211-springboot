@@ -20,66 +20,65 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class NatsEventListener {
 
-	@Autowired
-	private Connection natsConnection;
+    @Autowired
+    private Connection natsConnection;
 
-	@Autowired
-	private ProductoService productoService;
+    @Autowired
+    private ProductoService productoService;
 
-	@PostConstruct
-	public void subscribeToVentaCreateEvent() throws Exception {
-		Dispatcher dispatcher = natsConnection.createDispatcher((Message msg) -> {
-			try {
-				String ventaCreateJson = new String(msg.getData());
-				// Deserializar el JSON para obtener la venta y el producto
-				ObjectMapper objectMapper = new ObjectMapper();
-				objectMapper.registerModule(new JavaTimeModule());
-				objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    private final ObjectMapper objectMapper;
 
-				// Asegúrate de que el JSON tenga un mapa con claves "venta" y "producto"
-				Map<String, Object> payload = objectMapper.readValue(ventaCreateJson, Map.class);
+    public NatsEventListener() {
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
+        this.objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    }
 
-				// Convertir el mapa en los objetos correspondientes
-				Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
-				Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
+    @PostConstruct
+    public void init() throws Exception {
+        subscribeToVentaCreateEvent();
+        subscribeToVentaUpdateEvent();
+    }
 
-				// Llamar al método del servicio de productos para actualizar la cantidad
-				productoService.decProductoCantidad(producto, venta.getCantidad());
+    public void subscribeToVentaCreateEvent() throws Exception {
+        Dispatcher dispatcher = natsConnection.createDispatcher(this::handleVentaCreateEvent);
+        dispatcher.subscribe("venta.create");
+    }
 
-				System.out.println("Producto actualizado para venta " + venta.getId());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		dispatcher.subscribe("venta.create");
-	}
-	
-	@PostConstruct
-	public void subscribeToVentaUpdateEvent() throws Exception {
-		Dispatcher dispatcher = natsConnection.createDispatcher((Message msg) -> {
-			try {
-				String ventaCreateJson = new String(msg.getData());
-				// Deserializar el JSON para obtener la venta y el producto
-				ObjectMapper objectMapper = new ObjectMapper();
-				objectMapper.registerModule(new JavaTimeModule());
-				objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    public void subscribeToVentaUpdateEvent() throws Exception {
+        Dispatcher dispatcher = natsConnection.createDispatcher(this::handleVentaUpdateEvent);
+        dispatcher.subscribe("venta.update");
+    }
 
-				// Asegúrate de que el JSON tenga un mapa con claves "venta" y "producto"
-				Map<String, Object> payload = objectMapper.readValue(ventaCreateJson, Map.class);
+    private void handleVentaCreateEvent(Message msg) {
+        try {
+            String ventaCreateJson = new String(msg.getData());
+            Map<String, Object> payload = objectMapper.readValue(ventaCreateJson, Map.class);
+            Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
+            Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
 
-				// Convertir el mapa en los objetos correspondientes
-				Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
-				Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
-				int cantidadAnterior = (int) payload.get("cantidadAnterior");
+            productoService.decProductoCantidad(producto, venta.getCantidad());
 
-				// Llamar al método del servicio de productos para actualizar la cantidad
-				productoService.decProductoCantidad(producto, venta.getCantidad(), cantidadAnterior);
+            System.out.println("Producto actualizado para venta " + venta.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-				System.out.println("Producto actualizado para venta " + venta.getId());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		dispatcher.subscribe("venta.update");
-	}
+    private void handleVentaUpdateEvent(Message msg) {
+        try {
+            String ventaUpdateJson = new String(msg.getData());
+            Map<String, Object> payload = objectMapper.readValue(ventaUpdateJson, Map.class);
+            Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
+            Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
+            int cantidadAnterior = (int) payload.get("cantidadAnterior");
+
+            productoService.decProductoCantidad(producto, venta.getCantidad(), cantidadAnterior);
+
+            System.out.println("Producto actualizado para venta " + venta.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
+
