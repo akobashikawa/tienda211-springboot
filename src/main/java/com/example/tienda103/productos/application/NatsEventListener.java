@@ -57,7 +57,7 @@ public class NatsEventListener {
 
             productoService.decProductoCantidad(producto, venta.getCantidad());
 
-            System.out.println("Producto actualizado para venta " + venta.getId());
+            System.out.println("Producto actualizado por venta " + venta.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,7 +72,7 @@ public class NatsEventListener {
 
             productoService.decProductoCantidad(producto, venta.getCantidad(), cantidadAnterior);
 
-            System.out.println("Producto actualizado para venta " + venta.getId());
+            System.out.println("Producto actualizado por venta " + venta.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
