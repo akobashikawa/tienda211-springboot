@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.example.tienda104.application.GenericEvent;
+import com.example.tienda104.infrastructure.NatsEventPublisher;
 import com.example.tienda104.personas.application.PersonaService;
 import com.example.tienda104.personas.domain.Persona;
 import com.example.tienda104.productos.application.ProductoService;
@@ -27,20 +28,19 @@ import java.util.Optional;
 public class VentaService {
 
 	private final VentaRepository ventaRepository;
+	
 	private final ProductoService productoService;
 	private final PersonaService personaService;
+	private final NatsEventPublisher eventPublisher;
 //	private ApplicationEventPublisher eventPublisher;
 
-	@Autowired
-	private Connection natsConnection;
-
-//	public VentaService(VentaRepository ventaRepository, ProductoService productoService, PersonaService personaService,
+//	public VentaService(VentaReposupdatedItemository, ProductoService productoService, PersonaService personaService,
 //			ApplicationEventPublisher eventPublisher) {
-	public VentaService(VentaRepository ventaRepository, ProductoService productoService, PersonaService personaService) {
+	public VentaService(VentaRepository ventaRepository, ProductoService productoService, PersonaService personaService, NatsEventPublisher eventPublisher) {
 		this.ventaRepository = ventaRepository;
 		this.productoService = productoService;
 		this.personaService = personaService;
-//		this.eventPublisher = eventPublisher;
+		this.eventPublisher = eventPublisher;
 	}
 
 	public List<Venta> getItems() {
@@ -64,12 +64,13 @@ public class VentaService {
 		venta.setCantidad(ventaDTO.getCantidad());
 		venta.setFechaHora(LocalDateTime.now());
 
+		Venta newItem = ventaRepository.save(venta);
 		Map<String, Object> payload = new HashMap<>();
-		payload.put("venta", venta);
+		payload.put("venta", newItem);
 		payload.put("producto", producto);
 //    	eventPublisher.publishEvent(new GenericEvent(this, "ventaCreate", payload));
-		publishEvent("ventaCreate", payload);
-		return ventaRepository.save(venta);
+		eventPublisher.publishEvent("venta.created", payload);
+		return newItem;
 	}
 
 	public Venta updateItem(Long id, VentaDTO ventaDTO) {
@@ -92,31 +93,18 @@ public class VentaService {
 		}
 		venta.setFechaHora(LocalDateTime.now());
 
+		Venta updatedItem = ventaRepository.save(venta);
 		Map<String, Object> payload = new HashMap<>();
-		payload.put("venta", venta);
+		payload.put("venta", updatedItem);
 		payload.put("producto", producto);
 		payload.put("cantidadAnterior", cantidadAnterior);
 //		eventPublisher.publishEvent(new GenericEvent(this, "ventaUpdate", payload));
-		publishEvent("ventaUpdate", payload);
-
-		return ventaRepository.save(venta);
+		eventPublisher.publishEvent("venta.updated", payload);
+		return updatedItem;
 	}
 
 	public void deleteItemById(Long id) {
 		ventaRepository.deleteById(id);
 	}
 
-	private void publishEvent(String subject, Object payload) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule());
-			objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-			String message = objectMapper.writeValueAsString(payload);
-			natsConnection.publish(subject, message.getBytes());
-			System.out.println("Venta event published: " + message);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

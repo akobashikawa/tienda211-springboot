@@ -1,10 +1,13 @@
 package com.example.tienda104.productos.application;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.tienda104.infrastructure.NatsEventPublisher;
 import com.example.tienda104.productos.domain.Producto;
 import com.example.tienda104.productos.domain.ProductoRepository;
 
@@ -12,9 +15,12 @@ import com.example.tienda104.productos.domain.ProductoRepository;
 public class ProductoService {
 
 	private final ProductoRepository productoRepository;
+	
+	private final NatsEventPublisher eventPublisher;
 
-	public ProductoService(ProductoRepository productoRepository) {
+	public ProductoService(ProductoRepository productoRepository, NatsEventPublisher eventPublisher) {
 		this.productoRepository = productoRepository;
+		this.eventPublisher = eventPublisher;
 	}
 
 	public List<Producto> getItems() {
@@ -26,7 +32,11 @@ public class ProductoService {
 	}
 
 	public Producto createItem(Producto producto) {
-		return productoRepository.save(producto);
+		Producto newItem = productoRepository.save(producto);
+		Map<String, Object> payload = new HashMap<>();
+		payload.put("producto", newItem);
+		eventPublisher.publishEvent("producto.created", payload);
+		return newItem;
 	}
 
 	public Producto updateItem(Long id, Producto producto) {
@@ -44,7 +54,11 @@ public class ProductoService {
 		if (producto.getCantidad() != null) {
 			found.setCantidad(producto.getCantidad());
 		}
-		return productoRepository.save(found);
+		Producto updatedItem = productoRepository.save(found);
+		Map<String, Object> payload = new HashMap<>();
+		payload.put("producto", updatedItem);
+		eventPublisher.publishEvent("producto.updated", payload);
+		return updatedItem;
 	}
 
 	public void deleteItemById(Long id) {

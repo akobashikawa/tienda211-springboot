@@ -1,12 +1,12 @@
-package com.example.tienda104.productos.application;
+package com.example.tienda104.personas.application;
 
 import io.nats.client.Connection;
 import io.nats.client.Dispatcher;
 import io.nats.client.Message;
 import io.nats.client.MessageHandler;
 
-import com.example.tienda104.productos.domain.Producto;
-import com.example.tienda104.ventas.domain.Venta;
+import com.example.tienda104.infrastructure.SocketIOService;
+import com.example.tienda104.personas.domain.Persona;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,10 @@ public class NatsEventListener {
     private Connection natsConnection;
 
     @Autowired
-    private ProductoService productoService;
+    private PersonaService personaService;
+    
+    @Autowired
+    private SocketIOService socketIOService;
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
@@ -35,8 +38,8 @@ public class NatsEventListener {
 
     @PostConstruct
     public void init() throws Exception {
-        subscribeToEvent("venta.created", this::handleVentaCreateEvent);
-        subscribeToEvent("venta.updated", this::handleVentaUpdateEvent);
+        subscribeToEvent("persona.created", this::handlePersonaCreateEvent);
+        subscribeToEvent("persona.updated", this::handlePersonaUpdateEvent);
     }
     
     private void subscribeToEvent(String topic, MessageHandler handler) throws Exception {
@@ -49,30 +52,23 @@ public class NatsEventListener {
         return objectMapper.readValue(json, Map.class);
     }
 
-    private void handleVentaCreateEvent(Message msg) {
+    private void handlePersonaCreateEvent(Message msg) {
         try {
             Map<String, Object> payload = getPayload(msg);
-            Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
-            Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
-
-            productoService.decProductoCantidad(producto, venta.getCantidad());
-
-            System.out.println("Producto actualizado por venta " + venta.getId());
+            Persona persona = objectMapper.convertValue(payload.get("persona"), Persona.class);
+            socketIOService.emitItem("personaCreated", persona);
+            System.out.println("Persona creada: " + persona.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void handleVentaUpdateEvent(Message msg) {
+    private void handlePersonaUpdateEvent(Message msg) {
         try {
         	Map<String, Object> payload = getPayload(msg);
-            Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
-            Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
-            int cantidadAnterior = (int) payload.get("cantidadAnterior");
-
-            productoService.decProductoCantidad(producto, venta.getCantidad(), cantidadAnterior);
-
-            System.out.println("Producto actualizado por venta " + venta.getId());
+            Persona persona = objectMapper.convertValue(payload.get("persona"), Persona.class);
+            socketIOService.emitItem("personaUpdated", persona);
+            System.out.println("Persona actualizada: " + persona.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }

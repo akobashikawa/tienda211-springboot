@@ -19,9 +19,6 @@ public class PersonaController {
     @Autowired
     private PersonaService personaService;
     
-    @Autowired
-    private SocketIOService socketIOService;
-
     @GetMapping
     public ResponseEntity<List<Persona>> getItems() {
         List<Persona> personas = personaService.getItems();
@@ -40,7 +37,6 @@ public class PersonaController {
     public ResponseEntity<Persona> createItem(@RequestBody Persona persona) {
         try {
             Persona createdItem = personaService.createItem(persona);
-            socketIOService.emitItem("personaCreated", createdItem);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdItem); // 201 Created
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 Bad Request
@@ -51,7 +47,6 @@ public class PersonaController {
     public ResponseEntity<Persona> updateItem(@PathVariable Long id, @RequestBody Persona persona) {
         try {
             Persona updatedItem = personaService.updateItem(id, persona);
-            socketIOService.emitItem("personaUpdated", updatedItem);
             return ResponseEntity.ok(updatedItem); // 200 OK
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
