@@ -40,7 +40,6 @@ public class ProductoController {
     public ResponseEntity<Producto> createItem(@RequestBody Producto producto) {
         try {
             Producto createdItem = productoService.createItem(producto);
-            socketIOService.emitItem("productoCreated", createdItem);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdItem); // 201 Created
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 Bad Request
@@ -51,7 +50,6 @@ public class ProductoController {
     public ResponseEntity<Producto> updateItem(@PathVariable Long id, @RequestBody Producto producto) {
         try {
             Producto updatedItem = productoService.updateItem(id, producto);
-            socketIOService.emitItem("productoUpdated", updatedItem);
             return ResponseEntity.ok(updatedItem); // 200 OK
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found

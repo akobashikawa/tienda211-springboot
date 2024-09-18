@@ -66,6 +66,7 @@ public class SocketIOService {
 			// Serializar el objeto a JSON y luego emitir
 			String json = objectMapper.writeValueAsString(item);
 			server.getBroadcastOperations().sendEvent(subject, json);
+			System.out.println("Evento SocketIO enviado: " + subject);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
