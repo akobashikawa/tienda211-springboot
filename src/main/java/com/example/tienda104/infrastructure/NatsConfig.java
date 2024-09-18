@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class NatsConfig {
 
     @Bean
-    public Connection natsConnection() throws Exception {
+    Connection natsConnection() throws Exception {
         return Nats.connect("nats://localhost:4222");
     }
 }

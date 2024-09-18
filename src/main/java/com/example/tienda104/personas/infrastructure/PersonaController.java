@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.tienda104.infrastructure.SocketIOService;
 import com.example.tienda104.personas.application.PersonaService;
 import com.example.tienda104.personas.domain.Persona;
 
@@ -17,6 +18,9 @@ public class PersonaController {
 
     @Autowired
     private PersonaService personaService;
+    
+    @Autowired
+    private SocketIOService socketIOService;
 
     @GetMapping
     public ResponseEntity<List<Persona>> getItems() {
@@ -35,8 +39,9 @@ public class PersonaController {
     @PostMapping
     public ResponseEntity<Persona> createItem(@RequestBody Persona persona) {
         try {
-            Persona createdPersona = personaService.createItem(persona);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdPersona); // 201 Created
+            Persona createdItem = personaService.createItem(persona);
+            socketIOService.emitItem("personaCreated", createdItem);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdItem); // 201 Created
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 Bad Request
         }
@@ -45,8 +50,9 @@ public class PersonaController {
     @PutMapping("/{id}")
     public ResponseEntity<Persona> updateItem(@PathVariable Long id, @RequestBody Persona persona) {
         try {
-            Persona updatedPersona = personaService.updateItem(id, persona);
-            return ResponseEntity.ok(updatedPersona); // 200 OK
+            Persona updatedItem = personaService.updateItem(id, persona);
+            socketIOService.emitItem("personaUpdated", updatedItem);
+            return ResponseEntity.ok(updatedItem); // 200 OK
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
         }

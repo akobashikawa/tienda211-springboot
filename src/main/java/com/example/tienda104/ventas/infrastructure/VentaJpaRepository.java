@@ -28,8 +28,8 @@ public class VentaJpaRepository implements VentaRepository {
     }
 
     @Override
-    public Venta save(Venta producto) {
-        return jpaVentaRepository.save(producto);
+    public Venta save(Venta venta) {
+        return jpaVentaRepository.save(venta);
     }
 
     @Override

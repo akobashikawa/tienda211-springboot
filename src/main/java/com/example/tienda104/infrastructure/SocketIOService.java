@@ -6,6 +6,8 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.example.tienda104.productos.domain.Producto;
 import com.example.tienda104.ventas.domain.Venta;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import jakarta.annotation.PreDestroy;
 
@@ -17,12 +19,18 @@ import org.springframework.stereotype.Service;
 public class SocketIOService {
 
 	private SocketIOServer server = null;
+	private final ObjectMapper objectMapper;
 
 	public SocketIOService(@Value("${socketio.host}") String host, @Value("${socketio.port}") int port) {
 		Configuration config = new Configuration();
 		config.setHostname(host);
 		config.setPort(port);
 		config.setOrigin("*");
+
+		// Configurar el ObjectMapper con soporte para Java 8 Date/Time API
+		objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule()); // Módulo para manejar fechas como LocalDateTime
+		objectMapper.findAndRegisterModules(); // Esto permite registrar automáticamente otros módulos de Jackson
 
 		server = new SocketIOServer(config);
 
@@ -47,14 +55,20 @@ public class SocketIOService {
 		System.out.println("SocketIOServer iniciado: " + server.toString());
 
 	}
-	
+
 	@PreDestroy
-    public void stopServer() {
-        server.stop();
-    }
+	public void stopServer() {
+		server.stop();
+	}
 
 	public void emitItem(String subject, Object item) {
-		server.getBroadcastOperations().sendEvent(subject, item);
+		try {
+			// Serializar el objeto a JSON y luego emitir
+			String json = objectMapper.writeValueAsString(item);
+			server.getBroadcastOperations().sendEvent(subject, json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

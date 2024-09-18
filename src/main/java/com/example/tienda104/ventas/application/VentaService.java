@@ -29,17 +29,18 @@ public class VentaService {
 	private final VentaRepository ventaRepository;
 	private final ProductoService productoService;
 	private final PersonaService personaService;
-	private ApplicationEventPublisher eventPublisher;
+//	private ApplicationEventPublisher eventPublisher;
 
 	@Autowired
 	private Connection natsConnection;
 
-	public VentaService(VentaRepository ventaRepository, ProductoService productoService, PersonaService personaService,
-			ApplicationEventPublisher eventPublisher) {
+//	public VentaService(VentaRepository ventaRepository, ProductoService productoService, PersonaService personaService,
+//			ApplicationEventPublisher eventPublisher) {
+	public VentaService(VentaRepository ventaRepository, ProductoService productoService, PersonaService personaService) {
 		this.ventaRepository = ventaRepository;
 		this.productoService = productoService;
 		this.personaService = personaService;
-		this.eventPublisher = eventPublisher;
+//		this.eventPublisher = eventPublisher;
 	}
 
 	public List<Venta> getItems() {
@@ -57,23 +58,17 @@ public class VentaService {
 		Persona persona = personaService.getItemById(ventaDTO.getPersona_id())
 				.orElseThrow(() -> new RuntimeException("Persona no encontrada"));
 
-//    	int nuevaCantidad = producto.getCantidad() - ventaDTO.getCantidad();
-//    	producto.setCantidad(nuevaCantidad);
-//    	productoService.updateItem(producto.getId(), producto);
-//    	productoService.decProductoCantidad(producto, ventaDTO.getCantidad());
-
 		venta.setProducto(producto);
 		venta.setPersona(persona);
 		venta.setPrecio(ventaDTO.getPrecio());
 		venta.setCantidad(ventaDTO.getCantidad());
 		venta.setFechaHora(LocalDateTime.now());
 
-//    	eventPublisher.publishEvent(new VentaCreateEvent(this, venta, producto));
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("venta", venta);
 		payload.put("producto", producto);
 //    	eventPublisher.publishEvent(new GenericEvent(this, "ventaCreate", payload));
-		publishEvent("venta.create", payload);
+		publishEvent("ventaCreate", payload);
 		return ventaRepository.save(venta);
 	}
 
@@ -83,12 +78,6 @@ public class VentaService {
 				.orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 		Persona persona = personaService.getItemById(ventaDTO.getPersona_id())
 				.orElseThrow(() -> new RuntimeException("Persona no encontrada"));
-
-//    	int diferencia = ventaDTO.getCantidad() - venta.getCantidad();
-//    	int nuevaCantidad = producto.getCantidad() - diferencia;
-//    	producto.setCantidad(nuevaCantidad);
-//    	productoService.updateItem(producto.getId(), producto);
-//		productoService.decProductoCantidad(producto, ventaDTO.getCantidad(), venta.getCantidad());
 
 		venta.setProducto(producto);
 		venta.setPersona(persona);
@@ -103,13 +92,12 @@ public class VentaService {
 		}
 		venta.setFechaHora(LocalDateTime.now());
 
-//    	eventPublisher.publishEvent(new VentaUpdateEvent(this, venta, producto, cantidadAnterior));
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("venta", venta);
 		payload.put("producto", producto);
 		payload.put("cantidadAnterior", cantidadAnterior);
 //		eventPublisher.publishEvent(new GenericEvent(this, "ventaUpdate", payload));
-		publishEvent("venta.update", payload);
+		publishEvent("ventaUpdate", payload);
 
 		return ventaRepository.save(venta);
 	}

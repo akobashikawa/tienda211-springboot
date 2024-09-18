@@ -8,7 +8,7 @@ public interface VentaRepository {
 
 	Optional<Venta> findById(Long id);
 
-	Venta save(Venta producto);
+	Venta save(Venta venta);
 
 	void deleteById(Long id);
 }

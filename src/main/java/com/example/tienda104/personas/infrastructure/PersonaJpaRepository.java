@@ -28,8 +28,8 @@ public class PersonaJpaRepository implements PersonaRepository {
     }
 
     @Override
-    public Persona save(Persona producto) {
-        return jpaPersonaRepository.save(producto);
+    public Persona save(Persona persona) {
+        return jpaPersonaRepository.save(persona);
     }
 
     @Override

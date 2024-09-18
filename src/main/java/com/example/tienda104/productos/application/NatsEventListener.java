@@ -35,8 +35,8 @@ public class NatsEventListener {
 
     @PostConstruct
     public void init() throws Exception {
-        subscribeToEvent("venta.create", this::handleVentaCreateEvent);
-        subscribeToEvent("venta.update", this::handleVentaUpdateEvent);
+        subscribeToEvent("ventaCreate", this::handleVentaCreateEvent);
+        subscribeToEvent("ventaUpdate", this::handleVentaUpdateEvent);
     }
     
     private void subscribeToEvent(String topic, MessageHandler handler) throws Exception {
