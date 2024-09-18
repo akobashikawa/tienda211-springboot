@@ -1,4 +1,4 @@
 FROM eclipse-temurin:17-jdk-alpine
 VOLUME /tmp
-COPY target/tienda102-0.0.1-SNAPSHOT.war tienda102.war
-ENTRYPOINT ["java","-jar","/tienda102.war"]
+COPY target/tienda104-0.0.1-SNAPSHOT.war tienda104.war
+ENTRYPOINT ["java","-jar","/tienda104.war"]
