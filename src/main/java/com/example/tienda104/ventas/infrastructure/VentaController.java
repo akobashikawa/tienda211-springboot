@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.tienda104.infrastructure.SocketIOService;
 import com.example.tienda104.ventas.application.VentaDTO;
 import com.example.tienda104.ventas.application.VentaService;
 import com.example.tienda104.ventas.domain.Venta;
@@ -17,6 +18,9 @@ public class VentaController {
 
     @Autowired
     private VentaService ventaService;
+    
+    @Autowired
+    private SocketIOService socketIOService;
 
     @GetMapping
     public ResponseEntity<List<Venta>> getItems() {
@@ -34,8 +38,9 @@ public class VentaController {
     @PostMapping
     public ResponseEntity<Venta> createItem(@RequestBody VentaDTO ventaDTO) {
         try {
-            Venta createdVenta = ventaService.createItem(ventaDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdVenta); // 201 Created
+            Venta createdItem = ventaService.createItem(ventaDTO);
+            socketIOService.emitItem("ventaCreated", createdItem);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdItem); // 201 Created
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 Bad Request
         }
@@ -44,8 +49,9 @@ public class VentaController {
     @PutMapping("/{id}")
     public ResponseEntity<Venta> updateItem(@PathVariable Long id, @RequestBody VentaDTO ventaDTO) {
         try {
-            Venta updatedVenta = ventaService.updateItem(id, ventaDTO);
-            return ResponseEntity.ok(updatedVenta); // 200 OK
+            Venta updatedItem = ventaService.updateItem(id, ventaDTO);
+            socketIOService.emitItem("ventaUpdated", updatedItem);
+            return ResponseEntity.ok(updatedItem); // 200 OK
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
         }

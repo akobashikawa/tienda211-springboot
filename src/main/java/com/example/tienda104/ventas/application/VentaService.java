@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import com.example.tienda104.gateway.application.GenericEvent;
+import com.example.tienda104.application.GenericEvent;
 import com.example.tienda104.personas.application.PersonaService;
 import com.example.tienda104.personas.domain.Persona;
 import com.example.tienda104.productos.application.ProductoService;

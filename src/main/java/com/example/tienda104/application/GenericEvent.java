@@ -1,4 +1,4 @@
-package com.example.tienda104.gateway.application;
+package com.example.tienda104.application;
 
 import java.util.Map;
 

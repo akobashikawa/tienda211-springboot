@@ -3,7 +3,7 @@ package com.example.tienda104.productos.application;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import com.example.tienda104.gateway.application.GenericEvent;
+import com.example.tienda104.application.GenericEvent;
 import com.example.tienda104.productos.domain.Producto;
 import com.example.tienda104.ventas.application.VentaCreateEvent;
 import com.example.tienda104.ventas.application.VentaDTO;

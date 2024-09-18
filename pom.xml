@@ -99,7 +99,13 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
-			<version>2.13.0</version> <!-- O la versión que estés utilizando -->
+		</dependency>
+		<!--
+		https://mvnrepository.com/artifact/com.corundumstudio.socketio/netty-socketio -->
+		<dependency>
+			<groupId>com.corundumstudio.socketio</groupId>
+			<artifactId>netty-socketio</artifactId>
+			<version>2.0.3</version>
 		</dependency>
 
 	</dependencies>

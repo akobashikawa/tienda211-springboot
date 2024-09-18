@@ -1,9 +1,6 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-
-const PRODUCTOS_SERVICE_URL = `http://localhost:3000/api/productos`;
-const PERSONAS_SERVICE_URL = `http://localhost:3000/api/personas`;
-const VENTAS_SERVICE_URL = `http://localhost:3000/api/ventas`;
+import { socket } from "../socket.js";
 
 // Obtener la URL base de la página actual
 const baseUrl = window.location.origin;
@@ -334,7 +331,7 @@ const App = {
 		const createProducto = async () => {
 			const body = producto.value;
 			const { data } = await axios.post(productosServiceUrl, body);
-			await getProductos();
+			// await getProductos();
 		};
 
 		// MODIFICAR PRODUCTO
@@ -350,7 +347,7 @@ const App = {
 		const updateProducto = async () => {
 			const body = producto.value;
 			const { data } = await axios.put(`${productosServiceUrl}/${body.id}`, body);
-			await getProductos();
+			// await getProductos();
 		};
 
 		// LISTAR PERSONAS
@@ -490,7 +487,50 @@ const App = {
 			await getProductos();
 			await getPersonas();
 			await getVentas();
-		})
+
+			socket.on('productoCreated', async (created) => {
+				console.log('productoCreated', created);
+				await getProductos();
+			});
+
+			socket.on('productoUpdated', async (updated) => {
+				console.log('productoUpdated', updated);
+				await getProductos();
+			});
+
+
+			socket.on('personaCreated', async (created) => {
+				console.log('personaCreated', created);
+				await getPersonas();
+			});
+
+			socket.on('personaUpdated', async (updated) => {
+				console.log('personaUpdated', updated);
+				await getPersonas();
+			});
+
+
+			socket.on('ventaCreated', async (created) => {
+				console.log('ventaCreated', created);
+				await getVentas();
+				await getProductos();
+			});
+
+			socket.on('ventaUpdated', async (updated) => {
+				console.log('ventaUpdated', updated);
+				await getVentas();
+				await getProductos();
+			});
+		});
+
+		socket.on('productoActualizado', (productoActualizado) => {
+			const index = productos.value.findIndex(p => p.id === productoActualizado.id);
+			if (index !== -1) {
+				productos.value.splice(index, 1, productoActualizado);
+			} else {
+				productos.value.push(productoActualizado);
+			}
+		});
 
 		return {
 			errorMessage,

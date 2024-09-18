@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.tienda104.infrastructure.SocketIOService;
 import com.example.tienda104.productos.application.ProductoService;
 import com.example.tienda104.productos.domain.Producto;
 
@@ -17,6 +18,9 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
+    
+    @Autowired
+    private SocketIOService socketIOService;
 
     @GetMapping
     public ResponseEntity<List<Producto>> getItems() {
@@ -35,8 +39,9 @@ public class ProductoController {
     @PostMapping
     public ResponseEntity<Producto> createItem(@RequestBody Producto producto) {
         try {
-            Producto createdProducto = productoService.createItem(producto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProducto); // 201 Created
+            Producto createdItem = productoService.createItem(producto);
+            socketIOService.emitItem("productoCreated", createdItem);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdItem); // 201 Created
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // 400 Bad Request
         }
@@ -45,8 +50,9 @@ public class ProductoController {
     @PutMapping("/{id}")
     public ResponseEntity<Producto> updateItem(@PathVariable Long id, @RequestBody Producto producto) {
         try {
-            Producto updatedProducto = productoService.updateItem(id, producto);
-            return ResponseEntity.ok(updatedProducto); // 200 OK
+            Producto updatedItem = productoService.updateItem(id, producto);
+            socketIOService.emitItem("productoUpdated", updatedItem);
+            return ResponseEntity.ok(updatedItem); // 200 OK
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
         }

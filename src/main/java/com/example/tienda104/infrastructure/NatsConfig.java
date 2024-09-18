@@ -1,4 +1,4 @@
-package com.example.tienda104.config;
+package com.example.tienda104.infrastructure;
 
 import io.nats.client.Connection;
 import io.nats.client.Nats;
