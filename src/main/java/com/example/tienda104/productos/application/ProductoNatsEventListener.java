@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 
 @Component
-public class NatsEventListener {
+public class ProductoNatsEventListener {
 
     @Autowired
     private Connection natsConnection;
@@ -35,6 +35,9 @@ public class NatsEventListener {
 
     @PostConstruct
     public void init() throws Exception {
+		subscribeToEvent("producto.created", this::handleProductoCreateEvent);
+		subscribeToEvent("producto.updated", this::handleProductoUpdateEvent);
+          
         subscribeToEvent("venta.created", this::handleVentaCreateEvent);
         subscribeToEvent("venta.updated", this::handleVentaUpdateEvent);
     }
@@ -47,6 +50,28 @@ public class NatsEventListener {
     private Map<String, Object> getPayload(Message msg) throws JsonMappingException, JsonProcessingException {
     	String json = new String(msg.getData());
         return objectMapper.readValue(json, Map.class);
+    }
+    
+    private void handleProductoCreateEvent(Message msg) {
+        try {
+            Map<String, Object> payload = getPayload(msg);
+            Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
+
+            System.out.println("Producto creado " + producto.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleProductoUpdateEvent(Message msg) {
+        try {
+        	Map<String, Object> payload = getPayload(msg);
+            Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
+
+            System.out.println("Producto actualizado " + producto.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleVentaCreateEvent(Message msg) {

@@ -10,11 +10,11 @@ import com.example.tienda104.ventas.application.VentaUpdateEvent;
 import com.example.tienda104.ventas.domain.Venta;
 
 @Component
-public class VentaEventListener {
+public class ProductoEventListener {
 
 	private final ProductoService productoService;
 
-	public VentaEventListener(ProductoService productoService) {
+	public ProductoEventListener(ProductoService productoService) {
 		this.productoService = productoService;
 	}
 
