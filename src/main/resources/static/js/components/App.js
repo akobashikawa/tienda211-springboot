@@ -20,6 +20,10 @@ const App = {
 	<h1>Tienda 104</h1>
 			<div class="flash danger" v-if="errorMessage">{{ errorMessage }}</div>
 
+			<h2>Eventos</h2>
+
+			<div><ul><li v-for="evento of eventos">{{ evento }}</li></ul></div>
+
 			<h2>Productos</h2>
 
 			<button @click="getProductos()">Traer todos</button>
@@ -277,6 +281,7 @@ const App = {
 	setup() {
 		// UTILS
 		let errorMessage = ref(false);
+		const maxEventos = 5;
 
 		const formatDate = (date) => {
 			const d = new Date(date);
@@ -287,6 +292,18 @@ const App = {
 			const minutes = String(d.getMinutes()).padStart(2, '0');
 
 			return `${year}/${month}/${day} ${hours}:${minutes}`;
+		};
+
+		// EVENTOS
+		const eventos = ref([]);
+
+		const addEvento = (evento) => {
+			eventos.value.push(evento);
+			// Verificar si la longitud del array supera el límite
+			if (eventos.value.length > maxEventos) {
+				// Eliminar el primer elemento para mantener el tamaño limitado
+				eventos.value.shift();
+			}
 		};
 
 
@@ -388,7 +405,7 @@ const App = {
 		const createPersona = async () => {
 			const body = persona.value;
 			const { data } = await axios.post(personasServiceUrl, body);
-			await getPersonas();
+			// await getPersonas();
 		};
 
 		// MODIFICAR PERSONA
@@ -404,7 +421,7 @@ const App = {
 		const updatePersona = async () => {
 			const body = persona.value;
 			const { data } = await axios.put(`${personasServiceUrl}/${body.id}`, body);
-			await getPersonas();
+			// await getPersonas();
 		};
 
 		// CREAR VENTA
@@ -422,8 +439,8 @@ const App = {
 			} catch (error) {
 				errorMessage.value = error.response.data ? error.response.data.error : false;
 			} finally {
-				await getVentas();
-				await getProductos();
+				// await getVentas();
+				// await getProductos();
 			}
 		};
 
@@ -478,8 +495,8 @@ const App = {
 		const updateVenta = async () => {
 			const body = venta.value;
 			const { data } = await axios.put(`${ventasServiceUrl}/${body.id}`, body);
-			await getVentas();
-			await getProductos();
+			// await getVentas();
+			// await getProductos();
 		};
 
 
@@ -489,34 +506,40 @@ const App = {
 			await getVentas();
 
 			socket.on('productoCreated', async (created) => {
+				addEvento('productoCreated');
 				console.log('productoCreated', created);
 				await getProductos();
 			});
 
 			socket.on('productoUpdated', async (updated) => {
+				addEvento('productoUpdated');
 				console.log('productoUpdated', updated);
 				await getProductos();
 			});
 
 
 			socket.on('personaCreated', async (created) => {
+				addEvento('personaCreated');
 				console.log('personaCreated', created);
 				await getPersonas();
 			});
 
 			socket.on('personaUpdated', async (updated) => {
+				addEvento('personaUpdated');
 				console.log('personaUpdated', updated);
 				await getPersonas();
 			});
 
 
 			socket.on('ventaCreated', async (created) => {
+				addEvento('ventaCreated');
 				console.log('ventaCreated', created);
 				await getVentas();
 				await getProductos();
 			});
 
 			socket.on('ventaUpdated', async (updated) => {
+				addEvento('ventaUpdated');
 				console.log('ventaUpdated', updated);
 				await getVentas();
 				await getProductos();
@@ -534,6 +557,7 @@ const App = {
 
 		return {
 			errorMessage,
+			eventos,
 			formatDate,
 
 			productos,
