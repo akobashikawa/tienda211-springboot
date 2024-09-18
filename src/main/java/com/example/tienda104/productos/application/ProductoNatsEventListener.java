@@ -83,10 +83,8 @@ public class ProductoNatsEventListener {
 			Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
 			Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
 
-			productoService.decProductoCantidad(producto, venta.getCantidad());
+			productoService.decProductoCantidad(producto, venta.getCantidad());// además llamará a productoUpdate
 			
-			socketIOService.emitItem("productoUpdated", producto);
-
 			System.out.println("venta.created@producto: " + venta.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -100,10 +98,8 @@ public class ProductoNatsEventListener {
 			Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
 			int cantidadAnterior = (int) payload.get("cantidadAnterior");
 
-			productoService.decProductoCantidad(producto, venta.getCantidad(), cantidadAnterior);
+			productoService.decProductoCantidad(producto, venta.getCantidad(), cantidadAnterior);// además llamará a productoUpdate
 			
-			socketIOService.emitItem("productoUpdated", producto);
-
 			System.out.println("venta.updated@producto: " + venta.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
