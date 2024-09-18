@@ -296,9 +296,11 @@ const App = {
 
 		// EVENTOS
 		const eventos = ref([]);
+		let numEvento = 0;
 
 		const addEvento = (evento) => {
-			eventos.value.push(evento);
+			numEvento++;
+			eventos.value.push(`${numEvento}. ${evento}`);
 			// Verificar si la longitud del array supera el límite
 			if (eventos.value.length > maxEventos) {
 				// Eliminar el primer elemento para mantener el tamaño limitado
