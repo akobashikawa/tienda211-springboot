@@ -17,7 +17,7 @@ console.log('Ventas URL:', ventasServiceUrl);
 
 const App = {
 	template: `
-	<h1>Tienda 104</h1>
+	<h1>Tienda 211</h1>
 			<div class="flash danger" v-if="errorMessage">{{ errorMessage }}</div>
 
 			<h2>Eventos</h2>
@@ -274,7 +274,7 @@ const App = {
 
 			
 			<footer>
-				<em><a href="https://github.com/akobashikawa/tienda104-springboot" target="_blank">Tienda 104 - Spring Boot</a></em>
+				<em><a href="https://github.com/akobashikawa/tienda211-springboot" target="_blank">Tienda 211 - Spring Boot</a></em>
 			</footer>
     `,
 

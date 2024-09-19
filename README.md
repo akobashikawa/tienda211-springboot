@@ -1,32 +1,12 @@
-# Tienda104 - Spring Boot
+# Tienda211 - Spring Boot
 
-## Monolito
 
-```mermaid
-graph TD
-    style Frontend stroke:teal
-    style Productos stroke:#89c
-    style Personas stroke:#89c 
-    style Ventas stroke:#89c
-    style database stroke:#d62
-    
-    subgraph Monolito
-        direction LR
-        Frontend
-        Productos <--> database[(Database)]
-        Personas <--> database[(Database)]
-        Ventas <--> database[(Database)]
-    end
-    
-    Frontend <--> Productos
-    Frontend <--> Personas
-    Frontend <--> Ventas
-```
-
-- Incluye todos los servicios
-- Incluye al frontend
+## Run
 
 ```sh
+# Requiere NATS server
+docker run -p 4222:4222 -ti nats:latest
+
 mvn clean install
 mvn spring-boot:run
 mvn spring-boot:run -Dspring.profiles.active=dev
@@ -35,7 +15,57 @@ mvn test -Dspring.profiles.active=test
 
 http://localhost:8080/
 
-## Hexagonal
+
+## Sobre la numeración de los proyectos relacionados
+
+- 101: frontend simple - backend monolito
+- 102: simple - monolito con eventos
+- 111: simple - nats - monolito (antes 103)
+- 211: socketIO - nats - monolito (antes 104)
+- 2111: socketIO - nats - gateway - monolito
+- 2113: socketIO - nats - gateway - microservices
+
+
+## Monolito con NATS y SocketIO (211)
+
+```mermaid
+graph LR
+    style Frontend stroke:teal
+    style Productos stroke:#89c
+    style Personas stroke:#89c 
+    style Ventas stroke:#89c
+    style database stroke:#d62
+
+    subgraph Frontend
+        SocketIOClient
+    end
+
+    subgraph Monolito
+        direction LR
+        SocketIOServer
+        NatsClient
+        Productos
+        Personas
+        Ventas
+    end
+
+    NATS <--> NatsClient
+
+    database
+    
+    SocketIOClient <--> SocketIOServer
+    Frontend <--> Productos
+    Frontend <--> Personas
+    Frontend <--> Ventas
+    Productos <--> database[(Database)]
+    Personas <--> database[(Database)]
+    Ventas <--> database[(Database)]
+```
+
+- Incluye todos los servicios
+
+
+## Capas
 
 - Un router invoca a controllers
 - Un controller invoca services
@@ -63,7 +93,41 @@ sequenceDiagram
     Controller-->>Cliente: Responde con los datos
 ```
 
-## curl
+
+## Hexagonal
+
+- Esta arquitectura se conoce también como **Ports and Adapters**.
+
+- La idea es organizar el código en capas que faciliten:
+    - Entender de qué se trata la solución
+        - Que entidades participan
+        - Qué eventos ocurren
+    - Probar cada capa por separado
+        - Testing de endpoints
+        - Testing de services
+    - Correr la misma lógica en diversos contextos
+        - Web
+        - Consola
+        - Testing
+    - Migrar la misma lógica a diversos contextos
+        - Otra versión del framework
+        - Otro framework
+        - Otro lenguaje
+
+- El lugar de agrupar los componentes por tipo (controllers, services, repositories), se agrupan por tópicos (productos, personas, ventas).
+
+- Dentro de cada tópico van los controllers, services, repositories, etc relacionados con el tópico pero agrupados según su funcionalidad.
+
+- `domain` es para contener lo conceptual, independientemente de su soporte, como el modelo de datos.
+
+- `application` es para contener la lógica del negocio, independientemente de dónde se vaya a usar, como los services, DTOs, events, listeners, etc.
+
+- `infrastructure` es para contener lo que relaciona la aplicación con el mundo exterior, como los controllers, la implementación de los repositories, configuraciones, conexión a servicios externos, etc.
+
+## Pruebas
+
+
+### curl
 
 ```sh
 # get all productos
