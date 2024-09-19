@@ -21,7 +21,7 @@ http://localhost:8080/
 - 101: frontend simple - backend monolito
 	- [akobashikawa/tienda101-springboot: Ejercicio de implementar una tienda. Spring Boot. BDD. Arquitectura Hexagonal. Monolito.](https://github.com/akobashikawa/tienda101-springboot)
 - 102: simple - monolito con eventos
-	[akobashikawa/tienda102-springboot: Ejercicio de implementar una tienda. Spring Boot. BDD. Arquitectura Hexagonal. Monolito con Eventos.](https://github.com/akobashikawa/tienda102-springboot)
+	- [akobashikawa/tienda102-springboot: Ejercicio de implementar una tienda. Spring Boot. BDD. Arquitectura Hexagonal. Monolito con Eventos.](https://github.com/akobashikawa/tienda102-springboot)
 - 111: simple - nats - monolito (antes 103)
 - 211: socketIO - nats - monolito (antes 104)
 - 2111: socketIO - nats - gateway - monolito
