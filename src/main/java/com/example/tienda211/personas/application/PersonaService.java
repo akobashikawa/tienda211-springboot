@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.example.tienda211.infrastructure.NatsEventPublisher;
 import com.example.tienda211.personas.domain.Persona;
 import com.example.tienda211.personas.domain.PersonaRepository;
+import com.example.tienda211.productos.domain.Producto;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,15 +41,22 @@ public class PersonaService {
     }
     
     public Persona updateItem(Long id, Persona persona) {
-    	persona.setId(id);
-        Persona updatedItem = personaRepository.save(persona);
+    	Persona found = personaRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Persona no encontrada: " + id));
+    	found.setNombre(persona.getNombre());
+        Persona updatedItem = personaRepository.save(found);
+        
         Map<String, Object> payload = new HashMap<>();
 		payload.put("persona", updatedItem);
 		eventPublisher.publishEvent("persona.updated", payload);
+		
         return updatedItem;
     }
 
     public void deleteItemById(Long id) {
+    	if (!personaRepository.existsById(id)) {
+	        throw new RuntimeException("Persona con ID " + id + " no encontrada");
+	    }
         personaRepository.deleteById(id);
     }
 }

@@ -12,5 +12,5 @@ public interface PersonaRepository {
 
 	void deleteById(Long id);
 
-	Object existsById(Long id);
+	boolean existsById(Long id);
 }

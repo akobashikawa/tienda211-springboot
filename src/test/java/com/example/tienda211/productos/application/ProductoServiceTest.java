@@ -81,8 +81,8 @@ class ProductoServiceTest {
 	    Optional<Producto> item = productoService.getItemById(1L);
 
 	    // Assert
-	    assertFalse(item.isPresent()); // Debe ser false porque no hay producto
-	    verify(productoRepository).findById(1L); // Verificar que se llamó al repositorio
+	    assertFalse(item.isPresent());
+	    verify(productoRepository).findById(1L);
 	}
 
 	@Test
@@ -125,11 +125,12 @@ class ProductoServiceTest {
 		dataItem.setNombre("Actualizado");
 
 		when(productoRepository.findById(1L)).thenReturn(Optional.of(item));
-		when(productoRepository.save(item)).thenReturn(item);
+		when(productoRepository.save(any(Producto.class))).thenReturn(item);
 
 		// Act
 		Producto updatedItem = productoService.updateItem(1L, dataItem);
-
+		
+		// Assert
 		assertEquals("Actualizado", updatedItem.getNombre());
 
 		// Verificar que se llama al repositorio

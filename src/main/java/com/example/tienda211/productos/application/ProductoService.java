@@ -55,9 +55,11 @@ public class ProductoService {
 			found.setCantidad(producto.getCantidad());
 		}
 		Producto updatedItem = productoRepository.save(found);
+		
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("producto", updatedItem);
 		eventPublisher.publishEvent("producto.updated", payload);
+		
 		return updatedItem;
 	}
 
