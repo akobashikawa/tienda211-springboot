@@ -75,11 +75,11 @@ class VentaServiceTest {
 		when(ventaRepository.findById(1L)).thenReturn(Optional.of(item));
 
 		// Act
-		Optional<Venta> result = ventaService.getItemById(1L);
+		Venta found = ventaService.getItemById(1L);
 
 		// Assert
-		assertTrue(result.isPresent());
-		assertEquals(1L, result.get().getId());
+		assertNotNull(found);
+		assertEquals(1L, found.getId());
 		verify(ventaRepository).findById(1L);
 	}
 
@@ -89,10 +89,12 @@ class VentaServiceTest {
 		when(ventaRepository.findById(1L)).thenReturn(Optional.empty());
 
 		// Act
-		Optional<Venta> item = ventaService.getItemById(1L);
+		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+			ventaService.getItemById(1L);
+	    });
 
 		// Assert
-		assertFalse(item.isPresent());
+		assertEquals("Venta no encontrada: 1", exception.getMessage());
 		verify(ventaRepository).findById(1L);
 	}
 

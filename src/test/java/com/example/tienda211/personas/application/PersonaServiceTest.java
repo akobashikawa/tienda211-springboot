@@ -65,11 +65,11 @@ class PersonaServiceTest {
 		when(personaRepository.findById(1L)).thenReturn(Optional.of(item));
 
 		// Act
-		Optional<Persona> result = personaService.getItemById(1L);
+		Persona found = personaService.getItemById(1L);
 
 		// Assert
-		assertTrue(result.isPresent());
-		assertEquals(1L, result.get().getId());
+		assertNotNull(found);
+		assertEquals(1L, found.getId());
 		verify(personaRepository).findById(1L);
 	}
 
@@ -79,10 +79,12 @@ class PersonaServiceTest {
 		when(personaRepository.findById(1L)).thenReturn(Optional.empty());
 
 		// Act
-		Optional<Persona> item = personaService.getItemById(1L);
+		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+			personaService.getItemById(1L);
+	    });
 
 		// Assert
-		assertFalse(item.isPresent());
+		assertEquals("Persona no encontrada: 1", exception.getMessage());
 		verify(personaRepository).findById(1L);
 	}
 

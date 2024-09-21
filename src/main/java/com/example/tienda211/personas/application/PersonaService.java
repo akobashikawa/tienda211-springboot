@@ -28,8 +28,9 @@ public class PersonaService {
         return personaRepository.findAll();
     }
 
-    public Optional<Persona> getItemById(Long id) {
-        return personaRepository.findById(id);
+    public Persona getItemById(Long id) {
+        return personaRepository.findById(id)
+        		.orElseThrow(() -> new RuntimeException("Persona no encontrada: " + id));
     }
 
     public Persona createItem(Persona persona) {

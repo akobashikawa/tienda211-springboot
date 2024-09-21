@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.tienda211.infrastructure.SocketIOService;
 import com.example.tienda211.personas.application.PersonaService;
 import com.example.tienda211.personas.domain.Persona;
+import com.example.tienda211.productos.domain.Producto;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,10 +28,12 @@ public class PersonaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Persona> getItemById(@PathVariable Long id) {
-        Optional<Persona> optionalPersona = personaService.getItemById(id);
-        return optionalPersona
-                .map(persona -> ResponseEntity.ok(persona)) // 200 OK
-                .orElseGet(() -> ResponseEntity.notFound().build()); // 404 Not Found
+    	try {
+    		Persona found = personaService.getItemById(id);
+        	return ResponseEntity.ok(found); // 200 OK
+        }  catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
+        }
     }
 
     @PostMapping

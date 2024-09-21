@@ -41,15 +41,15 @@ public class VentaService {
 		return ventaRepository.findAll();
 	}
 
-	public Optional<Venta> getItemById(Long id) {
-		return ventaRepository.findById(id);
+	public Venta getItemById(Long id) {
+		return ventaRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Venta no encontrada: " + id));
 	}
 
 	public Venta createItem(VentaDTO ventaDTO) {
 		Venta venta = new Venta();
 		Producto producto = productoService.getItemById(ventaDTO.getProducto_id());
-		Persona persona = personaService.getItemById(ventaDTO.getPersona_id())
-				.orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+		Persona persona = personaService.getItemById(ventaDTO.getPersona_id());
 
 		venta.setProducto(producto);
 		venta.setPersona(persona);
@@ -71,8 +71,7 @@ public class VentaService {
 				.orElseThrow(() -> new RuntimeException("Venta no encontrada"));
 		
 		Producto producto = productoService.getItemById(ventaDTO.getProducto_id());
-		Persona persona = personaService.getItemById(ventaDTO.getPersona_id())
-				.orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+		Persona persona = personaService.getItemById(ventaDTO.getPersona_id());
 
 		found.setProducto(producto);
 		found.setPersona(persona);

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.tienda211.infrastructure.SocketIOService;
+import com.example.tienda211.productos.domain.Producto;
 import com.example.tienda211.ventas.application.VentaDTO;
 import com.example.tienda211.ventas.application.VentaService;
 import com.example.tienda211.ventas.domain.Venta;
@@ -19,9 +20,6 @@ public class VentaController {
     @Autowired
     private VentaService ventaService;
     
-    @Autowired
-    private SocketIOService socketIOService;
-
     @GetMapping
     public ResponseEntity<List<Venta>> getItems() {
         List<Venta> ventas = ventaService.getItems();
@@ -30,9 +28,12 @@ public class VentaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Venta> getItemById(@PathVariable Long id) {
-        return ventaService.getItemById(id)
-                .map(venta -> ResponseEntity.ok(venta)) // 200 OK
-                .orElseGet(() -> ResponseEntity.notFound().build()); // 404 Not Found
+    	try {
+    		Venta found = ventaService.getItemById(id);
+        	return ResponseEntity.ok(found); // 200 OK
+        }  catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
+        } 
     }
 
     @PostMapping
