@@ -5,12 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.tienda211.infrastructure.SocketIOService;
 import com.example.tienda211.productos.application.ProductoService;
 import com.example.tienda211.productos.domain.Producto;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -19,9 +17,6 @@ public class ProductoController {
     @Autowired
     private ProductoService productoService;
     
-    @Autowired
-    private SocketIOService socketIOService;
-
     @GetMapping
     public ResponseEntity<List<Producto>> getItems() {
         List<Producto> productos = productoService.getItems();
@@ -30,10 +25,12 @@ public class ProductoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Producto> getItemById(@PathVariable Long id) {
-        Optional<Producto> optionalProducto = productoService.getItemById(id);
-        return optionalProducto
-                .map(producto -> ResponseEntity.ok(producto)) // 200 OK
-                .orElseGet(() -> ResponseEntity.notFound().build()); // 404 Not Found
+        try {
+        	Producto found = productoService.getItemById(id);
+        	return ResponseEntity.ok(found); // 200 OK
+        }  catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found
+        } 
     }
 
     @PostMapping

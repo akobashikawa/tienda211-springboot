@@ -64,11 +64,11 @@ class ProductoServiceTest {
 		when(productoRepository.findById(1L)).thenReturn(Optional.of(item));
 
 		// Act
-		Optional<Producto> result = productoService.getItemById(1L);
+		Producto found = productoService.getItemById(1L);
 
 		// Assert
-		assertTrue(result.isPresent());
-		assertEquals(1L, result.get().getId());
+		assertNotNull(found);
+		assertEquals(1L, found.getId());
 		verify(productoRepository).findById(1L);
 	}
 	
@@ -78,10 +78,12 @@ class ProductoServiceTest {
 	    when(productoRepository.findById(1L)).thenReturn(Optional.empty());
 
 	    // Act
-	    Optional<Producto> item = productoService.getItemById(1L);
+	    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+	        productoService.getItemById(1L);
+	    });
 
 	    // Assert
-	    assertFalse(item.isPresent());
+	    assertEquals("Producto no encontrado: 1", exception.getMessage());
 	    verify(productoRepository).findById(1L);
 	}
 

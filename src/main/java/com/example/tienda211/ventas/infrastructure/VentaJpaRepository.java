@@ -36,4 +36,9 @@ public class VentaJpaRepository implements VentaRepository {
     public void deleteById(Long id) {
         jpaVentaRepository.deleteById(id);
     }
+
+	@Override
+	public boolean existsById(Long id) {
+		return jpaVentaRepository.existsById(id);
+	}
 }

@@ -38,7 +38,7 @@ public class PersonaJpaRepository implements PersonaRepository {
     }
 
 	@Override
-	public Object existsById(Long id) {
+	public boolean existsById(Long id) {
 		return jpaPersonaRepository.existsById(id);
 	}
 }

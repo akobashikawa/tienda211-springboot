@@ -47,8 +47,7 @@ public class VentaService {
 
 	public Venta createItem(VentaDTO ventaDTO) {
 		Venta venta = new Venta();
-		Producto producto = productoService.getItemById(ventaDTO.getProducto_id())
-				.orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+		Producto producto = productoService.getItemById(ventaDTO.getProducto_id());
 		Persona persona = personaService.getItemById(ventaDTO.getPersona_id())
 				.orElseThrow(() -> new RuntimeException("Persona no encontrada"));
 
@@ -68,36 +67,42 @@ public class VentaService {
 	}
 
 	public Venta updateItem(Long id, VentaDTO ventaDTO) {
-		Venta venta = this.getItemById(id).orElseThrow(() -> new RuntimeException("Venta no encontrada"));
-		Producto producto = productoService.getItemById(ventaDTO.getProducto_id())
-				.orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+		Venta found = ventaRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Venta no encontrada"));
+		
+		Producto producto = productoService.getItemById(ventaDTO.getProducto_id());
 		Persona persona = personaService.getItemById(ventaDTO.getPersona_id())
 				.orElseThrow(() -> new RuntimeException("Persona no encontrada"));
 
-		venta.setProducto(producto);
-		venta.setPersona(persona);
+		found.setProducto(producto);
+		found.setPersona(persona);
 
 		if (ventaDTO.getPrecio() != null) {
-			venta.setPrecio(ventaDTO.getPrecio());
+			found.setPrecio(ventaDTO.getPrecio());
 		}
 
-		int cantidadAnterior = venta.getCantidad();
+		int cantidadAnterior = found.getCantidad();
 		if (ventaDTO.getCantidad() != null) {
-			venta.setCantidad(ventaDTO.getCantidad());
+			found.setCantidad(ventaDTO.getCantidad());
 		}
-		venta.setFechaHora(LocalDateTime.now());
+		found.setFechaHora(LocalDateTime.now());
 
-		Venta updatedItem = ventaRepository.save(venta);
+		Venta updatedItem = ventaRepository.save(found);
+		
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("venta", updatedItem);
 		payload.put("producto", producto);
 		payload.put("cantidadAnterior", cantidadAnterior);
 //		eventPublisher.publishEvent(new GenericEvent(this, "ventaUpdate", payload));
 		eventPublisher.publishEvent("venta.updated", payload);
+		
 		return updatedItem;
 	}
 
 	public void deleteItemById(Long id) {
+		if (!ventaRepository.existsById(id)) {
+	        throw new RuntimeException("Venta con ID " + id + " no encontrada");
+	    }
 		ventaRepository.deleteById(id);
 	}
 
