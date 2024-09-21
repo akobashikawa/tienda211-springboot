@@ -27,10 +27,10 @@ import com.example.tienda211.ventas.domain.VentaRepository;
 
 class VentaServiceTest {
 
-	@InjectMocks
+	@Mock
 	private ProductoService productoService;
-
-	@InjectMocks
+	
+	@Mock
 	private PersonaService personaService;
 
 	@InjectMocks
@@ -98,58 +98,58 @@ class VentaServiceTest {
 		verify(ventaRepository).findById(1L);
 	}
 
-//	@Test
-//	void testCreateItem() {
-//		// Arrange
-//		Producto producto = new Producto();
-//		producto.setId(1L);
-//		producto.setNombre("Nuevo");
-//		producto.setPrecio(new BigDecimal("10.00"));
-//		producto.setCantidad(10);
-//		Persona persona = new Persona();
-//		persona.setId(1L);
-//		persona.setNombre("Ana");
-//		VentaDTO itemDTO = new VentaDTO();
-//		itemDTO.setProducto_id(producto.getId());
-//		itemDTO.setPersona_id(persona.getId());
-//		itemDTO.setPrecio(new BigDecimal("15.00"));
-//		itemDTO.setCantidad(1);
-//
-//		// Mockear los servicios dependientes
-//		when(productoService.getItemById(1L)).thenReturn(producto);
-//		when(personaService.getItemById(1L)).thenReturn(Optional.of(persona));
-//
-//		Venta item = new Venta();
-//		item.setProducto(producto);
-//		item.setPersona(persona);
-//		item.setPrecio(new BigDecimal("15.00"));
-//		item.setCantidad(1);
-//		item.setFechaHora(LocalDateTime.now());
-//
-//		when(ventaRepository.save(any(Venta.class))).thenReturn(item);
-//
-//		// Act
-//		Venta newItem = ventaService.createItem(itemDTO);
-//
-//		// Assert
-//		assertNotNull(newItem);
-//		assertEquals(producto, newItem.getProducto());
-//		assertEquals(persona, newItem.getPersona());
-//
-//		// Verificar que los métodos dependientes fueron llamados
-//		verify(productoService).getItemById(1L);
-//		verify(personaService).getItemById(1L);
-//		verify(ventaRepository).save(any(Venta.class));
-//
-//		// Capturar y verificar el evento publicado
-//		@SuppressWarnings("unchecked")
-//		ArgumentCaptor<Map<String, Object>> captor = ArgumentCaptor.forClass(Map.class);
-//		verify(eventPublisher).publishEvent(eq("venta.created"), captor.capture());
-//
-//		Map<String, Object> payload = captor.getValue();
-//		assertEquals(newItem, payload.get("venta"));
-//		assertEquals(producto, payload.get("producto"));
-//	}
+	@Test
+	void testCreateItem() {
+		// Arrange
+		Producto producto = new Producto();
+		producto.setId(1L);
+		producto.setNombre("Nuevo");
+		producto.setPrecio(new BigDecimal("10.00"));
+		producto.setCantidad(10);
+		Persona persona = new Persona();
+		persona.setId(1L);
+		persona.setNombre("Ana");
+		VentaDTO itemDTO = new VentaDTO();
+		itemDTO.setProducto_id(producto.getId());
+		itemDTO.setPersona_id(persona.getId());
+		itemDTO.setPrecio(new BigDecimal("15.00"));
+		itemDTO.setCantidad(1);
+
+		// Mockear los servicios dependientes
+		when(productoService.getItemById(1L)).thenReturn(producto);
+		when(personaService.getItemById(1L)).thenReturn(persona);
+
+		Venta item = new Venta();
+		item.setProducto(producto);
+		item.setPersona(persona);
+		item.setPrecio(new BigDecimal("15.00"));
+		item.setCantidad(1);
+		item.setFechaHora(LocalDateTime.now());
+
+		when(ventaRepository.save(any(Venta.class))).thenReturn(item);
+
+		// Act
+		Venta newItem = ventaService.createItem(itemDTO);
+
+		// Assert
+		assertNotNull(newItem);
+		assertEquals(producto, newItem.getProducto());
+		assertEquals(persona, newItem.getPersona());
+
+		// Verificar que los métodos dependientes fueron llamados
+		verify(productoService).getItemById(1L);
+		verify(personaService).getItemById(1L);
+		verify(ventaRepository).save(any(Venta.class));
+
+		// Capturar y verificar el evento publicado
+		@SuppressWarnings("unchecked")
+		ArgumentCaptor<Map<String, Object>> captor = ArgumentCaptor.forClass(Map.class);
+		verify(eventPublisher).publishEvent(eq("venta.created"), captor.capture());
+
+		Map<String, Object> payload = captor.getValue();
+		assertEquals(newItem, payload.get("venta"));
+		assertEquals(producto, payload.get("producto"));
+	}
 
 //	@Test
 //	void testUpdateItem() {

@@ -19,7 +19,6 @@ import org.mockito.MockitoAnnotations;
 import com.example.tienda211.infrastructure.NatsEventPublisher;
 import com.example.tienda211.personas.domain.Persona;
 import com.example.tienda211.personas.domain.PersonaRepository;
-import com.example.tienda211.productos.domain.Producto;
 
 class PersonaServiceTest {
 
