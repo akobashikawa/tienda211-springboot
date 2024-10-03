@@ -60,7 +60,7 @@ public class VentaNatsEventListener {
 			int cantidad = (int) payload.get("cantidad");
 			
             Venta venta = ventaService.getItemById(ventaId);
-            socketIOService.emitItem("ventaCreated", venta);
+            socketIOService.emitItem("ventaCreated", venta.getId());
             System.out.println("Venta creada: " + venta.getId());
         } catch (Exception e) {
             e.printStackTrace();

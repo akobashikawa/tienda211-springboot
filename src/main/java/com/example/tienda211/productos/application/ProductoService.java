@@ -35,7 +35,7 @@ public class ProductoService {
 	public Producto createItem(Producto producto) {
 		Producto newItem = productoRepository.save(producto);
 		Map<String, Object> payload = new HashMap<>();
-		payload.put("producto", newItem);
+		payload.put("productoId", newItem.getId());
 		eventPublisher.publishEvent("producto.created", payload);
 		return newItem;
 	}
@@ -58,7 +58,7 @@ public class ProductoService {
 		Producto updatedItem = productoRepository.save(found);
 		
 		Map<String, Object> payload = new HashMap<>();
-		payload.put("producto", updatedItem);
+		payload.put("productoId", updatedItem.getId());
 		eventPublisher.publishEvent("producto.updated", payload);
 		
 		return updatedItem;

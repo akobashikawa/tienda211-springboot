@@ -59,9 +59,10 @@ public class ProductoNatsEventListener {
 	private void handleProductoCreateEvent(Message msg) {
 		try {
 			Map<String, Object> payload = getPayload(msg);
-			Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
-			socketIOService.emitItem("productoCreated", producto);
-			System.out.println("producto.created: " + producto.getId());
+			long productoId = (int) payload.get("productoId");
+//			Producto producto = productoService.getItemById(productoId);
+			socketIOService.emitItem("productoCreated", productoId);
+			System.out.println("producto.created: " + productoId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -70,9 +71,10 @@ public class ProductoNatsEventListener {
 	private void handleProductoUpdateEvent(Message msg) {
 		try {
 			Map<String, Object> payload = getPayload(msg);
-			Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
-			socketIOService.emitItem("productoUpdated", producto);
-			System.out.println("producto.updated: " + producto.getId());
+			long productoId = (int) payload.get("productoId");
+//			Producto producto = productoService.getItemById(productoId);
+			socketIOService.emitItem("productoUpdated", productoId);
+			System.out.println("producto.updated: " + productoId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
