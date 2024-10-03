@@ -351,6 +351,7 @@ const App = {
 
 		const createProducto = async () => {
 			const body = producto.value;
+			delete body.id;
 			const { data } = await axios.post(productosServiceUrl, body);
 			// await getProductos();
 		};
