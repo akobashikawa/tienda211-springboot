@@ -39,7 +39,7 @@ public class GenericEventListener {
 		Venta venta = (Venta) event.getPayload().get("venta");
 		Producto producto = (Producto) event.getPayload().get("producto");
 		System.out.println("Crear nueva venta para el producto " + producto.getId() + ": " + producto.getNombre());
-		productoService.decProductoCantidad(producto, venta.getCantidad());
+		productoService.decProductoCantidad(producto.getId(), venta.getCantidad());
 	}
 	
 	private void handleVentaUpdate(GenericEvent event) {
@@ -48,7 +48,7 @@ public class GenericEventListener {
 		int cantidadAnterior = (int) event.getPayload().get("cantidadAnterior");
 		System.out.println("Actualizar venta " + venta.getId() + " para el producto " + producto.getId() + ": "
 				+ producto.getNombre());
-		productoService.decProductoCantidad(producto, venta.getCantidad(), cantidadAnterior);
+		productoService.decProductoCantidad(producto.getId(), venta.getCantidad(), cantidadAnterior);
 	}
 
 }

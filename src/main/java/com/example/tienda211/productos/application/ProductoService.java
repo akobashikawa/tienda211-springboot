@@ -71,7 +71,8 @@ public class ProductoService {
 	    productoRepository.deleteById(id);
 	}
 
-	public void decProductoCantidad(Producto producto, int cantidad, int cantidadAnterior) {
+	public void decProductoCantidad(long productoId, int cantidad, int cantidadAnterior) {
+		Producto producto = getItemById(productoId);
         if (producto.getCantidad() < cantidad) {
             throw new RuntimeException("Cantidad insuficiente para el producto " + producto.getId());
         }
@@ -82,8 +83,8 @@ public class ProductoService {
         updateItem(producto.getId(), producto);
     }
     
-    public void decProductoCantidad(Producto producto, int cantidad) {
-    	decProductoCantidad(producto, cantidad, 0);
+    public void decProductoCantidad(long productoId, int cantidad) {
+    	decProductoCantidad(productoId, cantidad, 0);
     }
 	
 }
