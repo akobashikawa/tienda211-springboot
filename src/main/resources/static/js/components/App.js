@@ -1,9 +1,11 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { socket } from "../socket.js";
+import config from '../config.js';
+const apiBaseUrl = config.apiBaseUrl; console.log(apiBaseUrl)
 
 // Obtener la URL base de la página actual
-const baseUrl = window.location.origin;
+const baseUrl = apiBaseUrl || window.location.origin;
 
 // Construir las URLs de los servicios
 const productosServiceUrl = `${baseUrl}/api/productos`;
@@ -97,8 +99,8 @@ const App = {
 						</label>
 					</fieldset>
 					<footer>
-						<button type="reset" @click="closeModificarProductoDialog">Cancelar</button>
 						<button type="submit" @click="updateProducto">Guardar</button>
+						<button type="reset" @click="closeModificarProductoDialog">Cancelar</button>
 					</footer>
 
 				</form>

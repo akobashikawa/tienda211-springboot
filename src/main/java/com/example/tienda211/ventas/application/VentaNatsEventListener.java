@@ -55,7 +55,11 @@ public class VentaNatsEventListener {
     private void handleVentaCreateEvent(Message msg) {
         try {
             Map<String, Object> payload = getPayload(msg);
-            Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
+            long ventaId = (int) payload.get("ventaId");
+			long productoId = (int) payload.get("productoId");
+			int cantidad = (int) payload.get("cantidad");
+			
+            Venta venta = ventaService.getItemById(ventaId);
             socketIOService.emitItem("ventaCreated", venta);
             System.out.println("Venta creada: " + venta.getId());
         } catch (Exception e) {
@@ -66,7 +70,12 @@ public class VentaNatsEventListener {
     private void handleVentaUpdateEvent(Message msg) {
         try {
         	Map<String, Object> payload = getPayload(msg);
-            Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
+        	long ventaId = (int) payload.get("ventaId");
+			long productoId = (int) payload.get("productoId");
+			int cantidad = (int) payload.get("cantidad");
+			int cantidadAnterior = (int) payload.get("cantidadAnterior");
+			
+			Venta venta = ventaService.getItemById(ventaId);
             socketIOService.emitItem("ventaUpdated", venta);
             System.out.println("Venta actualizada: " + venta.getId());
         } catch (Exception e) {

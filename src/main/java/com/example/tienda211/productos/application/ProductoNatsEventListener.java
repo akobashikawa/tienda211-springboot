@@ -50,6 +50,7 @@ public class ProductoNatsEventListener {
 		dispatcher.subscribe(topic);
 	}
 
+	@SuppressWarnings("unchecked")
 	private Map<String, Object> getPayload(Message msg) throws JsonMappingException, JsonProcessingException {
 		String json = new String(msg.getData());
 		return objectMapper.readValue(json, Map.class);
@@ -80,27 +81,29 @@ public class ProductoNatsEventListener {
 	private void handleVentaCreateEvent(Message msg) {
 		try {
 			Map<String, Object> payload = getPayload(msg);
-			Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
-			Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
+			long ventaId = (int) payload.get("ventaId");
+			long productoId = (int) payload.get("productoId");
+			int cantidad = (int) payload.get("cantidad");
 
-			productoService.decProductoCantidad(producto, venta.getCantidad());// además llamará a productoUpdate
+			productoService.decProductoCantidad(productoId, cantidad);
 			
-			System.out.println("venta.created@producto: " + venta.getId());
+			System.out.println("venta.created@producto: " + ventaId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void handleVentaUpdateEvent(Message msg) {
+	private void handleVentaUpdateEvent(Message msg) {System.out.println("handleVentaUpdateEvent" + msg);
 		try {
 			Map<String, Object> payload = getPayload(msg);
-			Venta venta = objectMapper.convertValue(payload.get("venta"), Venta.class);
-			Producto producto = objectMapper.convertValue(payload.get("producto"), Producto.class);
+			long ventaId = (int) payload.get("ventaId");
+			long productoId = (int) payload.get("productoId");
+			int cantidad = (int) payload.get("cantidad");
 			int cantidadAnterior = (int) payload.get("cantidadAnterior");
 
-			productoService.decProductoCantidad(producto, venta.getCantidad(), cantidadAnterior);// además llamará a productoUpdate
+			productoService.decProductoCantidad(productoId, cantidad, cantidadAnterior);
 			
-			System.out.println("venta.updated@producto: " + venta.getId());
+			System.out.println("venta.updated@producto: " + ventaId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

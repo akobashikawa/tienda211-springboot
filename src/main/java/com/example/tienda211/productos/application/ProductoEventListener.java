@@ -25,7 +25,7 @@ public class ProductoEventListener {
 		// Realiza alguna acción cuando se crea una venta
 		System.out.println(
 				"Crear nueva venta para el producto " + producto.getId() + ": " + producto.getNombre());
-		productoService.decProductoCantidad(producto, venta.getCantidad());
+		productoService.decProductoCantidad(producto.getId(), venta.getCantidad());
 	}
 	
 	@EventListener
@@ -36,6 +36,6 @@ public class ProductoEventListener {
 		// Realiza alguna acción cuando se actualiza una venta
 		System.out.println(
 				"Actualizar venta " + venta.getId() + " para el producto " + producto.getId() + ": " + producto.getNombre());
-		productoService.decProductoCantidad(producto, venta.getCantidad(), cantidadAnterior);
+		productoService.decProductoCantidad(producto.getId(), venta.getCantidad(), cantidadAnterior);
 	}
 }
