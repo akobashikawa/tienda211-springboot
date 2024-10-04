@@ -409,6 +409,7 @@ const App = {
 
 		const createPersona = async () => {
 			const body = persona.value;
+			delete body.id;
 			const { data } = await axios.post(personasServiceUrl, body);
 			// await getPersonas();
 		};
@@ -439,6 +440,7 @@ const App = {
 
 		const createVenta = async () => {
 			const body = venta.value;
+			delete body.id;
 			try {
 				const { data } = await axios.post(ventasServiceUrl, body);
 			} catch (error) {
