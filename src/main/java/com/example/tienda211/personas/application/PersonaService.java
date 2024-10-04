@@ -36,7 +36,7 @@ public class PersonaService {
     public Persona createItem(Persona persona) {
         Persona newItem = personaRepository.save(persona);
         Map<String, Object> payload = new HashMap<>();
-		payload.put("persona", newItem);
+		payload.put("personaId", String.valueOf(newItem.getId()));
 		eventPublisher.publishEvent("persona.created", payload);
         return newItem;
     }
@@ -48,7 +48,7 @@ public class PersonaService {
         Persona updatedItem = personaRepository.save(found);
         
         Map<String, Object> payload = new HashMap<>();
-		payload.put("persona", updatedItem);
+		payload.put("personaId", String.valueOf(updatedItem.getId()));
 		eventPublisher.publishEvent("persona.updated", payload);
 		
         return updatedItem;

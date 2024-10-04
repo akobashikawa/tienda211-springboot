@@ -59,10 +59,10 @@ public class VentaService {
 
 		Venta newItem = ventaRepository.save(venta);
 		Map<String, Object> payload = new HashMap<>();
-		payload.put("ventaId", newItem.getId());
-		payload.put("productoId", producto.getId());
-		payload.put("cantidad", ventaDTO.getCantidad());
-		payload.put("precio", ventaDTO.getPrecio());
+		payload.put("ventaId", String.valueOf(newItem.getId()));
+		payload.put("productoId", String.valueOf(producto.getId()));
+		payload.put("cantidad", String.valueOf(ventaDTO.getCantidad()));
+		payload.put("precio", String.valueOf(ventaDTO.getPrecio()));
 //    	eventPublisher.publishEvent(new GenericEvent(this, "ventaCreate", payload));
 		eventPublisher.publishEvent("venta.created", payload);
 		return newItem;
@@ -91,11 +91,11 @@ public class VentaService {
 		Venta updatedItem = ventaRepository.save(found);
 		
 		Map<String, Object> payload = new HashMap<>();
-		payload.put("ventaId", updatedItem.getId());
-		payload.put("productoId", producto.getId());
-		payload.put("cantidad", ventaDTO.getCantidad());
-		payload.put("precio", ventaDTO.getPrecio());
-		payload.put("cantidadAnterior", cantidadAnterior);
+		payload.put("ventaId", String.valueOf(updatedItem.getId()));
+		payload.put("productoId", String.valueOf(producto.getId()));
+		payload.put("cantidad", String.valueOf(ventaDTO.getCantidad()));
+		payload.put("precio", String.valueOf(ventaDTO.getPrecio()));
+		payload.put("cantidadAnterior", String.valueOf(cantidadAnterior));
 //		eventPublisher.publishEvent(new GenericEvent(this, "ventaUpdate", payload));
 		System.out.println("updatedItem" + updatedItem);
 		System.out.println("payload" + payload);

@@ -55,9 +55,9 @@ public class PersonaNatsEventListener {
     private void handlePersonaCreateEvent(Message msg) {
         try {
             Map<String, Object> payload = getPayload(msg);
-            Persona persona = objectMapper.convertValue(payload.get("persona"), Persona.class);
-            socketIOService.emitItem("personaCreated", persona);
-            System.out.println("persona.created: " + persona.getId());
+            int personaId = Integer.parseInt((String) payload.get("personaId"));
+            socketIOService.emitItem("personaCreated", personaId);
+            System.out.println("persona.created: " + personaId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,9 +66,9 @@ public class PersonaNatsEventListener {
     private void handlePersonaUpdateEvent(Message msg) {
         try {
         	Map<String, Object> payload = getPayload(msg);
-            Persona persona = objectMapper.convertValue(payload.get("persona"), Persona.class);
-            socketIOService.emitItem("personaUpdated", persona);
-            System.out.println("persona.updated: " + persona.getId());
+        	int personaId = Integer.parseInt((String) payload.get("personaId"));
+            socketIOService.emitItem("personaUpdated", personaId);
+            System.out.println("persona.updated: " + personaId);
         } catch (Exception e) {
             e.printStackTrace();
         }

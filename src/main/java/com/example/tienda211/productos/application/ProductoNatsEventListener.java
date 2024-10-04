@@ -81,9 +81,9 @@ public class ProductoNatsEventListener {
 	private void handleVentaCreateEvent(Message msg) {
 		try {
 			Map<String, Object> payload = getPayload(msg);
-			long ventaId = (int) payload.get("ventaId");
-			long productoId = (int) payload.get("productoId");
-			int cantidad = (int) payload.get("cantidad");
+			long ventaId = Integer.parseInt((String) payload.get("ventaId"));
+			long productoId = Integer.parseInt((String) payload.get("productoId"));
+			int cantidad = Integer.parseInt((String) payload.get("cantidad"));
 
 			productoService.decProductoCantidad(productoId, cantidad);
 			
@@ -96,10 +96,10 @@ public class ProductoNatsEventListener {
 	private void handleVentaUpdateEvent(Message msg) {System.out.println("handleVentaUpdateEvent" + msg);
 		try {
 			Map<String, Object> payload = getPayload(msg);
-			long ventaId = (int) payload.get("ventaId");
-			long productoId = (int) payload.get("productoId");
-			int cantidad = (int) payload.get("cantidad");
-			int cantidadAnterior = (int) payload.get("cantidadAnterior");
+			long ventaId = Integer.parseInt((String) payload.get("ventaId"));
+			long productoId = Integer.parseInt((String) payload.get("productoId"));
+			int cantidad = Integer.parseInt((String) payload.get("cantidad"));
+			int cantidadAnterior = Integer.parseInt((String) payload.get("cantidadAnterior"));
 
 			productoService.decProductoCantidad(productoId, cantidad, cantidadAnterior);
 			
